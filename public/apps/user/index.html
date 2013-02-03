@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Audio App</title>
+		<style>
+			body{
+				position: fixed;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<script data-main="src/main.js" src="libs/require.js"></script>
+		<script>
+			require({
+				paths: {
+					happy: "../../../happy",
+					plugins: "../libs/require/",
+				}
+			});
+		</script>
+	</body>
+</html>

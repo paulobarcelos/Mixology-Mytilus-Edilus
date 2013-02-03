@@ -1,0 +1,21 @@
+{
+	"name": "MytilusEdilus",
+	"version": "0.0.1",
+	"author": "Paulo Barcelos - paulobarcelos.com",
+	"description": "Applications for Mixology, Mytilus Edilus edition.",
+	"dependencies" : {
+		"express": "3.1.0"
+	},
+	"engines": {
+		"node": "0.8.12"
+	},
+	"keywords": [
+		"mixology",
+		"MytilusEdilus"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/paulobarcelos/Mixology-Data-API.git"
+	}
+}

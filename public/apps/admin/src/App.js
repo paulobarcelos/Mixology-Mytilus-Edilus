@@ -14,7 +14,7 @@ function (
 		var 
 		self = this,
 		itemsContainer,
-		host = "http://127.0.0.1:8000/"; 
+		host = "http://mixology.eu01.aws.af.cm/"; 
 
 		var setup = function(){	
 			self.setFPS(0);
@@ -47,7 +47,7 @@ function (
 
 		var refreshItems = function(){
 			http.call({
-				url: host + 'api/items',
+				url: host + 'api/items?'+(new Date()).getTime() ,
 				onSuccess: function(request){
 					createItemList(JSON.parse(request.response));
 				}

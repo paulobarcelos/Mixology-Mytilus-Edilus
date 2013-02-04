@@ -1,12 +1,7 @@
-var express = require("express")
-	
-var app = express();
-app.configure(function () {
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(app.router);
-	app.use(express.static(path.join(__dirname, "public")));
-	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.listen(process.env.VCAP_APP_PORT || 8080);
+var static = require('node-static');
+var file = new static.Server('./public');
+require('http').createServer(function (request, response) {
+	request.addListener('end', function () {
+		file.serve(request, response);
+	});
+}).listen(process.env.VCAP_APP_PORT || 8080);

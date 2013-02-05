@@ -1,12 +1,15 @@
 define(
 [
 	'happy/app/BaseApp',
+
+	'happy/utils/browser',
 	'happy/utils/http',
 
 	'happy/_libs/amd-utils/array'
 ],
 function (
 	BaseApp,
+	browser,
 	http,
 	arrayUtils
 ){
@@ -15,7 +18,7 @@ function (
 		self = this,
 		container,
 		host = "http://mixology.eu01.aws.af.cm/",
-		action = 'flavors'; 
+		action = 'users'; 
 
 		var setup = function(){	
 			self.setFPS(0);
@@ -23,21 +26,18 @@ function (
 			var formContainer = document.createElement('div');
 			self.container.appendChild(formContainer);
 
-			var name = document.createElement('input');
-			name.type = 'text';
-			name.placeholder = 'name';
-			formContainer.appendChild(name);
-
-			var color = document.createElement('input');
-			color.type = 'text';
-			color.placeholder = 'color';
-			formContainer.appendChild(color);
+			var browserField = document.createElement('input');
+			browserField.type = 'text';
+			browserField.placeholder = 'browser';
+			formContainer.appendChild(browserField);
+			var browserInfo = browser.getInfo();
+			browserField.value = browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os;
 
 			var addBtn = document.createElement('button');
 			addBtn.innerHTML = 'add';
 			formContainer.appendChild(addBtn);			
 			addBtn.addEventListener('click', function(){
-				add(name.value, color.value);
+				add(browserField.value);
 			});
 
 			container = document.createElement('div');
@@ -62,24 +62,23 @@ function (
 		}
 		var createSingle = function(data){
 			var item = document.createElement('div');
-			item.style.color = data.color;
-			item.style.backgroundColor	 = data.color;
-			item.id = data._id; 
 
-			var name = document.createElement('input');
-			name.type = 'text';
-			name.value = data.name;
-			item.appendChild(name);
+			var browserField = document.createElement('input');
+			browserField.type = 'text';
+			browserField.value = data.browser;
+			browserField.placeholder = 'browser';
+			item.appendChild(browserField);
 
-			var color = document.createElement('input');
-			color.type = 'text';
-			color.value = data.color;
-			item.appendChild(color);
+			var createdField = document.createElement('input');
+			createdField.type = 'text';
+			createdField.value = data.created;
+			createdField.placeholder = 'created';
+			item.appendChild(createdField);
 
 			var updateBtn = document.createElement('button');
 			updateBtn.innerHTML = 'update';
 			updateBtn.addEventListener('click', function(){
-				update(data._id, name.value, color.value);
+				update(data._id, browserField.value, createdField.value);
 			});
 			item.appendChild(updateBtn);
 
@@ -93,10 +92,9 @@ function (
 			container.appendChild(item);
 		}
 
-		var add = function(name, color){
+		var add = function(browser){
 			var data = new FormData();
-			data.append("name", name);
-			data.append("color", color);
+			data.append("browser", browser);
 
 			http.call({
 				url: host + 'api/' + action,
@@ -105,10 +103,10 @@ function (
 				onSuccess: refresh
 			});
 		}
-		var update = function(id, name, color){
+		var update = function(id, browser, created){
 			var data = new FormData();
-			data.append("name", name);
-			data.append("color", color);
+			data.append("browser", browser);
+			data.append("created", created);
 
 			http.call({
 				url: host + 'api/' + action + '/' + id,

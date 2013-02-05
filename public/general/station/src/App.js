@@ -1,10 +1,14 @@
 define(
 [
 	'happy/app/BaseApp',
+
+	'happy/utils/browser',
 	'happy/utils/http'
 ],
 function (
 	BaseApp,
+
+	browser,
 	http
 ){
 	var App = function(){
@@ -17,12 +21,18 @@ function (
 		var setup = function(){	
 			self.setFPS(0);
 
+
 			var userData = localStorage['user'];
 			if(userData) onUserDataAcquired(userData);
 			else {
+				var browserInfo = browser.getInfo();
+				var browserFormData = new FormData();
+				browserFormData.append("browser", browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os);
+				
 				http.call({
 					url: host + 'api/users',
 					method: 'POST',
+					data: browserFormData,
 					onSuccess: function(request){
 						onUserDataAcquired(request.response);
 					},

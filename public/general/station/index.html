@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Mytilus Edilus</title>
+		<style>
+			body{
+				position: absolute;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				overflow: hidden;
+			}
+			.container {
+				width: 100%;
+				height: 100px;
+				position: relative;
+				overflow: scroll;
+				-webkit-overflow-scrolling: touch;
+			}
+			.elements {
+				width: 2000px;
+				height: 100px;
+				position: relative;
+			}
+			.elements2 {
+				width: 4000px;
+				height: 100px;
+				position: relative;
+			}
+			.item {
+				width: 200px;
+				height: 100px;
+				background-color: red;
+				float: left;
+				font-size: 50px;
+			}
+		</style>
+		<meta name="viewport" content="width=; initial-scale=1.0; user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		
+	</head>
+	<body>
+		<script data-main="/general/station/src/main.js" src="/general/station/libs/require.js"></script>
+		<script>
+			require.config({
+				urlArgs: (new Date()).getTime()
+			});
+			require({
+				paths: {
+					happy: "/happy",
+					plugins: "/general/station/libs/require/",
+				}
+			});
+		</script>
+		<script src="/general/station/js/overtrow.js"></script>
+		<script type="text/javascript">
+			function hideAddressBar(){
+				if(!window.location.hash) {
+					if(document.height <= window.outerHeight + 10) {
+						document.body.style.height = (window.outerHeight + 50) +'px';
+						setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+					}
+					else {
+						setTimeout( function(){ window.scrollTo(0, 1); }, 0 );
+					}
+				}
+			}
+			window.addEventListener("load", hideAddressBar );
+			window.addEventListener("orientationchange", hideAddressBar );
+		</script>
+	</body>
+</html>

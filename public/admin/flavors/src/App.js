@@ -13,7 +13,7 @@ function (
 	var App = function(){
 		var 
 		self = this,
-		itemsContainer,
+		flavorsContainer,
 		host = "http://mixology.eu01.aws.af.cm/"; 
 
 		var setup = function(){	
@@ -36,92 +36,92 @@ function (
 			button.innerHTML = 'add';
 			formContainer.appendChild(button);			
 			button.addEventListener('click', function(){
-				addItem(name.value, color.value);
+				addFlavor(name.value, color.value);
 			});
 
-			itemsContainer = document.createElement('div');
-			self.container.appendChild(itemsContainer);
+			flavorsContainer = document.createElement('div');
+			self.container.appendChild(flavorsContainer);
 
-			refreshItems();
+			refreshFlavors();
 		}
 
-		var refreshItems = function(){
+		var refreshFlavors = function(){
 			http.call({
-				url: host + 'api/items?'+(new Date()).getTime() ,
+				url: host + 'api/flavors?'+(new Date()).getTime() ,
 				onSuccess: function(request){
-					createItemList(JSON.parse(request.response));
+					createFlavorList(JSON.parse(request.response));
 				}
 			})
 		}
-		var createItemList = function(data){
-			while (itemsContainer.hasChildNodes()) {
-				itemsContainer.removeChild(itemsContainer.lastChild);
+		var createFlavorList = function(data){
+			while (flavorsContainer.hasChildNodes()) {
+				flavorsContainer.removeChild(flavorsContainer.lastChild);
 			}
-			arrayUtils.forEach(data, createSingleItem);
+			arrayUtils.forEach(data, createSingleFlavor);
 		}
-		var createSingleItem = function(data){
-			var item = document.createElement('div');
-			item.style.color = data.color;
-			item.style.backgroundColor	 = data.color;
-			item.id = data._id; 
+		var createSingleFlavor = function(data){
+			var flavor = document.createElement('div');
+			flavor.style.color = data.color;
+			flavor.style.backgroundColor	 = data.color;
+			flavor.id = data._id; 
 
 			var name = document.createElement('input');
 			name.type = 'text';
 			name.value = data.name;
-			item.appendChild(name);
+			flavor.appendChild(name);
 
 			var color = document.createElement('input');
 			color.type = 'text';
 			color.value = data.color;
-			item.appendChild(color);
+			flavor.appendChild(color);
 
 			var update = document.createElement('button');
 			update.innerHTML = 'update';
 			update.addEventListener('click', function(){
-				updateItem(data._id, name.value, color.value);
+				updateFlavor(data._id, name.value, color.value);
 			});
-			item.appendChild(update);
+			flavor.appendChild(update);
 
 			var del = document.createElement('button');
 			del.innerHTML = 'delete';
 			del.addEventListener('click', function(){
-				deleteItem(data._id);
+				deleteFlavor(data._id);
 			});	
-			item.appendChild(del);		
+			flavor.appendChild(del);		
 
-			itemsContainer.appendChild(item);
+			flavorsContainer.appendChild(flavor);
 		}
 
-		var addItem = function(name, color){
+		var addFlavor = function(name, color){
 			var data = new FormData();
 			data.append("name", name);
 			data.append("color", color);
 
 			http.call({
-				url: host + 'api/items',
+				url: host + 'api/flavors',
 				method: 'POST',
 				data: data,
-				onSuccess: refreshItems
+				onSuccess: refreshFlavors
 			});
 		}
-		var updateItem = function(id, name, color){
+		var updateFlavor = function(id, name, color){
 			var data = new FormData();
 			data.append("name", name);
 			data.append("color", color);
 
 			http.call({
-				url: host + 'api/items/' + id,
+				url: host + 'api/flavors/' + id,
 				method: 'PUT',
 				data: data,
-				onSuccess: refreshItems
+				onSuccess: refreshFlavors
 			});
 		}
-		var deleteItem = function(id){
+		var deleteFlavor = function(id){
 
 			http.call({
-				url: host + 'api/items/' + id,
+				url: host + 'api/flavors/' + id,
 				method: 'DELETE',
-				onSuccess: refreshItems
+				onSuccess: refreshFlavors
 			})
 		}
 

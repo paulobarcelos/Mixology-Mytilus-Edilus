@@ -35,14 +35,14 @@
 				font-size: 50px;
 			}
 		</style>
-		<meta name="viewport" content="width=; initial-scale=1.0; user-scalable=no" />
+		<meta name="viewport" content="width=320px; initial-scale=1.0; user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 		
 	</head>
 	<body>
-		<script data-main="/general/station/src/main.js" src="/general/station/libs/require.js"></script>
+		<script data-main="/station/src/main.js" src="/station/libs/require.js"></script>
 		<script>
 			require.config({
 				urlArgs: (new Date()).getTime()
@@ -50,11 +50,11 @@
 			require({
 				paths: {
 					happy: "/happy",
-					plugins: "/general/station/libs/require/",
+					plugins: "/station/libs/require/",
 				}
 			});
 		</script>
-		<script src="/general/station/js/overtrow.js"></script>
+		<script src="/station/js/overtrow.js"></script>
 		<script type="text/javascript">
 			function hideAddressBar(){
 				if(!window.location.hash) {

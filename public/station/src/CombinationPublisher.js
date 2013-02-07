@@ -61,7 +61,7 @@ function (
 				},
 				onError: function(){
 					// wait a bit and repeat!
-					setInterval(500, publish);
+					setTimeout(publish, 3000);
 				}
 			});
 		}

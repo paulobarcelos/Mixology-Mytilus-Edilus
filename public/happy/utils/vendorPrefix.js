@@ -1,9 +1,9 @@
 define(
 [
 	'../utils/console',
-	'../_libs/amd-utils/array/forEach',
-	'../_libs/amd-utils/array/combine',
-	'../_libs/amd-utils/string/pascalCase'
+	'../_libs/mout/array/forEach',
+	'../_libs/mout/array/combine',
+	'../_libs/mout/string/pascalCase'
 ],
 function(
 	console,

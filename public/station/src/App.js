@@ -5,7 +5,7 @@ define(
 	'happy/utils/browser',
 	'happy/utils/http',
 
-	'happy/_libs/amd-utils/array/forEach',
+	'happy/_libs/mout/array/forEach',
 
 	'CombinationPublisher'
 ],
@@ -73,7 +73,7 @@ function (
 			if(flavorsData) onFlavorsDataAcquired(flavorsData);
 			else {
 				http.call({
-					url: host + 'api/flavors',
+					url: host + 'api/flavors' + '?'+ (new Date()).getTime(),
 					method: 'GET',
 					onSuccess: function(request){
 						onFlavorsDataAcquired(request.response);

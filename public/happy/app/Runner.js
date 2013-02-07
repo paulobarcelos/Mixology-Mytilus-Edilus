@@ -2,7 +2,7 @@ define(
 [
 	'../utils/dom',
 	'../utils/vendorPrefix',
-	'../_libs/amd-utils/object/merge',
+	'../_libs/mout/object/merge',
 	'../_libs/stats'
 ], 
 function (

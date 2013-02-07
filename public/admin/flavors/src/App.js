@@ -3,7 +3,7 @@ define(
 	'happy/app/BaseApp',
 	'happy/utils/http',
 
-	'happy/_libs/amd-utils/array'
+	'happy/_libs/mout/array'
 ],
 function (
 	BaseApp,

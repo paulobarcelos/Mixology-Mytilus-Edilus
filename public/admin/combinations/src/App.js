@@ -5,7 +5,7 @@ define(
 	'happy/utils/browser',
 	'happy/utils/http',
 
-	'happy/_libs/amd-utils/array'
+	'happy/_libs/mout/array'
 ],
 function (
 	BaseApp,

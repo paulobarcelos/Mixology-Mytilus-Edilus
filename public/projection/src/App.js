@@ -2,40 +2,33 @@ define(
 [
 	'happy/app/BaseApp',
 
-	'happy/utils/browser',
-	'happy/utils/http',
-
-	'happy/_libs/mout/array/forEach',
-
 	'CombinationsManager'
 ],
 function (
 	BaseApp,
 
-	browser,
-	http,
-
-	forEach,
-
 	CombinationsManager
 ){
 	var App = function(){
 		var 
-		self = this,
-		combinationsManager;
+		self = this;
 
 		var setup = function(){	
-			combinationsManager = new CombinationsManager({
+			var combinationsManager = new CombinationsManager({
 				api: "http://mixology.eu01.aws.af.cm/api/",
-				mainFlavorId: "5111553bb26ab4d518000001",
+				mainFlavorId: "5112e4e4a5bc689301000001",
 				flavors: 'flavors',
 				combinations: 'combinations',
-				cacheFlavors: true,
-				onUpdate: function(manager){console.log('Combinations updated')}				
+				cacheFlavors: true			
 			})
 
 			combinationsManager.init();
+			combinationsManager.updatedSignal.add(onCombinationsUpdated)
 
+		}
+
+		var onCombinationsUpdated = function(manager){
+			console.log(manager.combinations)
 		}
 
 		var update = function(dt){

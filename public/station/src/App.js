@@ -26,7 +26,7 @@ function (
 		flavors,
 		sessionData,
 		combinationPublisher,
-		mytilusEdilusId = '5111553bb26ab4d518000001',
+		mytilusEdilusId = '5112e4e4a5bc689301000001',
 		host = "http://mixology.eu01.aws.af.cm/",
 
 		mainContainer,

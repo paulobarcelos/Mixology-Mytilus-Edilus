@@ -2,15 +2,18 @@ define(
 [
 	'happy/utils/http',
 
-	'happy/_libs/mout/object/mixIn'
+	'happy/_libs/mout/array/forEach',
+	'happy/_libs/mout/object/mixIn',
+	'happy/_libs/signals'
 ],
 function (
 	http,
 
-	mixIn
-){
-	var dummyFunction = function(){};
+	forEach,
+	mixIn,
 
+	Signal
+){
 	var CombinationsManager = function(options){
 		var 
 		self = this,
@@ -19,16 +22,17 @@ function (
 			flavors : 'flavors',
 			combinations : 'combinations',
 			cacheFlavors: true,
-			mainFlavorId : '0',
-			onUpdate: dummyFunction
+			mainFlavorId : '0'
 		},
 		settings = mixIn({}, defaults, options),
 		flavors = [],
+		flavorsIndexedById = {},
 		combinations = [],
-		combinationsTree = [];
+		combinationsTree = [],
+		updatedSignal = new Signal();
 
 		var init = function(){	
-			var flavorsData = (settings.cacheFlavors) ? localStorage['flavors'] : [];
+			var flavorsData = (settings.cacheFlavors) ? localStorage['flavors'] : '[]';
 			if(flavorsData) onFlavorDataReady(flavorsData);
 			else {
 				http.call({
@@ -45,8 +49,14 @@ function (
 		}
 
 		var onFlavorDataReady = function(data){
-			if(settings.cacheFlavors) localStorage['flavors'] = data;
+			if(settings.cacheFlavors){
+				localStorage['flavors'] = data;
+			}
 			flavors = JSON.parse(data);
+			flavorsIndexedById = {};
+			forEach(flavors, function(flavor){
+				flavorsIndexedById[flavor._id] = flavor;
+			});
 			fetchCombinations();
 		}
 		var fetchCombinations = function(){
@@ -71,10 +81,16 @@ function (
 			if(rawCombinations.length == combinations.length) return;
 
 			combinations = rawCombinations;
+			forEach(combinations, function(combination){
+				combination.flavors = [];
+				for (var i = combination.flavorIds.length - 1; i >= 0; i--) {
+					var flavor = flavorsIndexedById[combination.flavorIds[i]];
+					combination.flavors.push(flavor);
+				};
+			});
 
 
-			console.log(rawCombinations);
-			settings.onUpdate.apply(window, [self]);
+			updatedSignal.dispatch(self);
 		}
 
 		var getFlavors = function(){
@@ -85,6 +101,9 @@ function (
 		}
 		var getCombinationsTree = function(){
 			return combinationsTree;
+		}
+		var getUpdatedSignal = function(){
+			return updatedSignal;
 		}
 
 		Object.defineProperty(self, 'init', {
@@ -98,6 +117,9 @@ function (
 		});
 		Object.defineProperty(self, 'combinationsTree', {
 			get: getCombinationsTree
+		});
+		Object.defineProperty(self, 'updatedSignal', {
+			get: getUpdatedSignal
 		});
 	}
 	return CombinationsManager;

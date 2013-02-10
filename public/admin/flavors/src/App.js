@@ -3,12 +3,14 @@ define(
 	'happy/app/BaseApp',
 	'happy/utils/http',
 
-	'happy/_libs/mout/array'
+	'happy/_libs/mout/array/forEach',
+	'happy/_libs/mout/array/indexOf'
 ],
 function (
 	BaseApp,
 	http,
-	arrayUtils
+	forEach,
+	indexOf
 ){
 	var App = function(){
 		var 
@@ -33,11 +35,15 @@ function (
 			color.placeholder = 'color';
 			formContainer.appendChild(color);
 
+			var groups = document.createElement('input');
+			groups.type = 'text';
+			formContainer.appendChild(groups);
+
 			var addBtn = document.createElement('button');
 			addBtn.innerHTML = 'add';
 			formContainer.appendChild(addBtn);			
 			addBtn.addEventListener('click', function(){
-				add(name.value, color.value);
+				add(name.value, color.value, groups.value);
 			});
 
 			container = document.createElement('div');
@@ -58,7 +64,7 @@ function (
 			while (container.hasChildNodes()) {
 				container.removeChild(container.lastChild);
 			}
-			arrayUtils.forEach(data, createSingle);
+			forEach(data, createSingle);
 		}
 		var createSingle = function(data){
 			var item = document.createElement('div');
@@ -76,10 +82,20 @@ function (
 			color.value = data.color;
 			item.appendChild(color);
 
+			var groups = document.createElement('input');
+			groups.type = 'text';
+			groups.value = data.groups;
+			item.appendChild(groups);
+
+			var created = document.createElement('input');
+			created.type = 'text';
+			created.value = data.created;
+			item.appendChild(created);
+
 			var updateBtn = document.createElement('button');
 			updateBtn.innerHTML = 'update';
 			updateBtn.addEventListener('click', function(){
-				update(data._id, name.value, color.value);
+				update(data._id, name.value, color.value, groups.value, created.value);
 			});
 			item.appendChild(updateBtn);
 
@@ -93,10 +109,12 @@ function (
 			container.appendChild(item);
 		}
 
-		var add = function(name, color){
+		var add = function(name, color, groups){
 			var data = new FormData();
 			data.append("name", name);
 			data.append("color", color);
+			data.append("groups", groups);
+			console.log(groups)
 
 			http.call({
 				url: host + 'api/' + action,
@@ -105,10 +123,12 @@ function (
 				onSuccess: refresh
 			});
 		}
-		var update = function(id, name, color){
+		var update = function(id, name, color, groups, created){
 			var data = new FormData();
 			data.append("name", name);
 			data.append("color", color);
+			data.append("groups", groups);
+			data.append("created", created);
 
 			http.call({
 				url: host + 'api/' + action + '/' + id,

@@ -21,6 +21,11 @@ function(
 			identity: "Chrome"
 		},
 		{ 	string: navigator.userAgent,
+			subString: "CriOS",
+			versionSearch: "CriOS/",
+			identity: "Chrome"
+		},
+		{ 	string: navigator.userAgent,
 			subString: "OmniWeb",
 			versionSearch: "OmniWeb/",
 			identity: "OmniWeb"

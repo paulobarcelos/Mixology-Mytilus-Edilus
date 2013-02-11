@@ -27,7 +27,8 @@ function (
 			node = document.createElement('div');
 			dom.addClass(node, 'flavor');
 			node.style.backgroundColor = flavor.color;
-			node.addEventListener('click', onClick);	
+			var isTouch = 'ontouchstart' in document.documentElement;
+			node.addEventListener((isTouch) ? 'touchstart':'click', onClick);
 		}
 
 		var select = function(silent){

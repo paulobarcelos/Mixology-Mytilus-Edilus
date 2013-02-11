@@ -20,6 +20,7 @@ function (
 		selected,
 		flavorSelectors,
 		ready,
+		changedSignal,
 		readySignal,
 		unreadySignal;
 
@@ -42,27 +43,28 @@ function (
 				cluster.appendChild(flavorSelector.node);
 			};
 
+			ready = false;
 			selected = [];
-
+			changedSignal = new Signal();
 			readySignal = new Signal();
-			unReadySignal = new Signal();
+			unreadySignal = new Signal();
 		};
 
-		var onFlavorSelected = function(flavor){
+		var onFlavorSelected = function(flavorSelector){
 			var alreadyIn = false;
 			for (var i = selected.length - 1; i >= 0; i--) {
-				if(flavor._id == selected[i]._id){
+				if(flavorSelector.flavor._id == selected[i].flavor._id){
 					alreadyIn = true;
 					break;
 				}					
 			}
 
-			if(!alreadyIn) selected.push(flavor);
+			if(!alreadyIn) selected.push(flavorSelector);
 			processChange();
 		}
-		var onFlavorDeselected = function(flavor){
+		var onFlavorDeselected = function(flavorSelector){
 			for (var i = selected.length - 1; i >= 0; i--) {
-				if(flavor._id == selected[i]._id){
+				if(flavorSelector.flavor._id == selected[i].flavor._id){
 					selected.splice(i, 1);
 					break;
 				}
@@ -73,7 +75,8 @@ function (
 			if(selected.length == 2){
 				if(!ready){
 					for (var i = flavorSelectors.length - 1; i >= 0; i--) {
-						flavorSelectors[i].active = false
+						if(!flavorSelectors[i].selected)
+							flavorSelectors[i].active = false
 					};
 					ready = true;
 					readySignal.dispatch(self);
@@ -87,14 +90,17 @@ function (
 					ready = false;
 					unreadySignal.dispatch(self);
 				}
-				
 			}
+			changedSignal.dispatch(self);
 		}
 		var getNode = function(){
 			return node;
 		}
 		var getSelected = function(){
 			return selected;
+		}
+		var getChangedSignal = function(){
+			return changedSignal;
 		}
 		var getReadySignal = function(){
 			return readySignal;
@@ -108,6 +114,9 @@ function (
 		});
 		Object.defineProperty(self, 'selected', {
 			get: getSelected
+		});
+		Object.defineProperty(self, 'changedSignal', {
+			get: getChangedSignal
 		});
 		Object.defineProperty(self, 'readySignal', {
 			get: getReadySignal

@@ -33,8 +33,9 @@ function (
 			dom.addClass(separator, 'separator');
 
 			node.appendChild(content);
-			node.appendChild(separator);			
-			node.addEventListener('click', onClick);	
+			node.appendChild(separator);
+			var isTouch = 'ontouchstart' in document.documentElement;
+			node.addEventListener((isTouch) ? 'touchstart':'click', onClick);		
 		}
 
 		var select = function(silent){

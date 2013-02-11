@@ -7,13 +7,13 @@
 				position: absolute;
 				margin: 0;
 				padding: 0;
-				width: 840px;
+				width: 740px;
 			}
 			.combination-selector{
 				position: relative;
 				width: 700px;
 				height: 630px;
-				margin: 70px;
+				margin: 20px;
 			}
 			.tabs {
 				position: absolute;
@@ -49,25 +49,33 @@
 			}
 			.tab .content {
 				width: 100%;
-				height: 130px;
+				height: 149px;
 				-webkit-border-top-left-radius: 35px;
 				-webkit-border-bottom-left-radius: 35px;
 				-moz-border-radius-topleft: 35px;
 				-moz-border-radius-bottomleft: 35px;
 				border-top-left-radius: 35px;
 				border-bottom-left-radius: 35px;
+				-moz-box-shadow: -1px 0 0 2px #000;
+				-webkit-box-shadow: -1px 0 0 2px #000;
+				box-shadow: -1px 0 0 2px #000;
+				text-align: center;
+				line-height: 149px;
+				font-family: Helvetica, Arial, sans-serif;
+				text-transform: uppercase;
+				font-weight: bold;
+				font-size: 3em;
 			}
 			.tab .separator{
 				width: 100%;
-				height: 20px;
+				height: 10px;
 				-moz-border-radius-bottomleft: 35px inset;
 				border-bottom-left-radius: 35px inset;
 			}
-			.tab .content{
-				background-color: #f00;
-			}
+
 			.tab.selected .content{
 				background-color: #000;
+				color: #fff;
 			}
 			.group {
 				position: relative;
@@ -79,8 +87,8 @@
 				float: left;
 			}
 			.flavor.selected {
-				-webkit-box-shadow:  0px 0px 0px 5px rgba(0, 0, 0, 1);
-				box-shadow:  0px 0px 0px 5px rgba(0, 0, 0, 1);
+				-webkit-box-shadow:  0px 0px 0px 7px rgba(0, 0, 0, 1);
+				box-shadow:  0px 0px 0px 7px rgba(0, 0, 0, 1);
 				z-index: 1	;
 			}
 			.cluster {
@@ -118,8 +126,14 @@
 				height: 14.2857143%;
 				width: 100%;
 			}
+			.names .simple {
+				margin-top: 2em;
+			}
+			.names .simple > div{
+				margin-top: 1em;
+			}
 		</style>
-		<meta name="viewport" content="width=840px, user-scalable=no" />
+		<meta name="viewport" content="width=740px, user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -128,9 +142,9 @@
 	<body>
 		<script data-main="/station/src/main.js" src="/station/libs/require.js"></script>
 		<script>
-			require.config({
+			/*require.config({
 				urlArgs: (new Date()).getTime()
-			});
+			});*/
 			require({
 				paths: {
 					happy: "/happy",
@@ -138,7 +152,6 @@
 				}
 			});
 		</script>
-		<script src="/station/js/overtrow.js"></script>
 		<script type="text/javascript">
 			function hideAddressBar(){
 				if(!window.location.hash) {

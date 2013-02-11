@@ -21,11 +21,15 @@ function(){
 			ele.className=ele.className.replace(reg,' ');
 		}
 	}
+	var empty = function(element) {
+		while (element.hasChildNodes()) element.removeChild(element.lastChild);
+	}
 
 	return {
 		size: size,
 		hasClass: hasClass,
 		addClass: addClass,
 		removeClass: removeClass,
+		empty: empty
 	}
 });

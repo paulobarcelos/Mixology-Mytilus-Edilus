@@ -1,6 +1,8 @@
 define(
 [
 	'happy/utils/dom',
+
+	'happy/_libs/mout/array/forEach',
 	'happy/_libs/signals',
 
 	'GroupSelector',
@@ -8,6 +10,8 @@ define(
 ],
 function (
 	dom,
+
+	forEach,
 	Signal,
 
 	GroupSelector,
@@ -22,11 +26,17 @@ function (
 		flavorsNode,
 
 		namesNode,
+		simpleFlavorsNamesNode,
+		mainFlavorNameNode,
 
 		groupSelectors,
 		flavorGroups,
+
+		selected,
+		ready,
 		readySignal,
-		unReadySignal;
+		unReadySignal,
+		changedSignal;
 
 		var init = function(){
 			node = document.createElement('div');
@@ -42,17 +52,29 @@ function (
 
 			namesNode = document.createElement('div');
 			dom.addClass(namesNode, 'names');
-			
 
-			var mainFlavorName = document.createElement('div');
-			dom.addClass(mainFlavorName, 'main');
-			mainFlavorName.innerHTML = mainFlavor.name;
-			namesNode.appendChild(mainFlavorName);
+			simpleFlavorsNamesNode = document.createElement('div');
+			dom.addClass(simpleFlavorsNamesNode, 'simple');
+			namesNode.appendChild(simpleFlavorsNamesNode);
+			
+			mainFlavorNameNode = document.createElement('div');
+			dom.addClass(mainFlavorNameNode, 'main');
+			mainFlavorNameNode.innerHTML = mainFlavor.name;
+			namesNode.appendChild(mainFlavorNameNode);
+
+			ready = false;
+			selected = [];
+			readySignal = new Signal();
+			unreadySignal = new Signal();
+			changedSignal = new Signal();
 
 			groupSelectors = {};
 			flavorGroups = {};
 			for(id in groups){
 				flavorGroups[id] = new FlavorGroup(groups[id]);
+				flavorGroups[id].changedSignal.add(onFlavorGroupChanged);
+				
+
 				groupSelectors[id] = new GroupSelector(id);
 				groupSelectors[id].selectedSignal.add(onGroupSelected);
 
@@ -64,20 +86,47 @@ function (
 				groupSelectors[id].select();
 				break;
 			}
-
-			selected = [];
-
-			readySignal = new Signal();
-			unReadySignal = new Signal();
 		}
 
 		var onGroupSelected = function(group){
 			for(id in groups){
 				if(id != group.id) groupSelectors[id].deselect();
 			}
-			while (flavorsNode.hasChildNodes()) flavorsNode.removeChild(flavorsNode.lastChild);
+			dom.empty(flavorsNode);
 			flavorsNode.appendChild(flavorGroups[group.id].node);
 			flavorsNode.appendChild(namesNode);
+
+			selected = flavorGroups[group.id].selected;
+			processChange();
+		}
+
+		var onFlavorGroupChanged = function (flavorGroup) {
+			selected = flavorGroup.selected;
+			processChange();
+		}
+
+		var processChange = function(){
+			dom.empty(simpleFlavorsNamesNode);
+			forEach(selected, function(flavorSelector){
+				var nameNode = document.createElement('div');
+				nameNode.innerHTML = flavorSelector.flavor.name;
+				simpleFlavorsNamesNode.appendChild(nameNode);
+			});
+
+			if(selected.length == 2){
+				if(!ready){
+					ready = true;
+					readySignal.dispatch(self);
+				}
+			}
+			else{
+				if(ready){
+					ready = false;
+					unreadySignal.dispatch(self);
+				}
+			}
+
+			changedSignal.dispatch(self);
 		}
 
 		var getNode = function(){

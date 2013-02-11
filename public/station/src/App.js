@@ -121,82 +121,14 @@ function (
 			combinationPublisher = new CombinationPublisher(host);
 			combinationPublisher.start();
 
-			return;
-
-			mainContainer = document.createElement('div');
-			self.container.appendChild(mainContainer);
-
-			initialContainer = document.createElement('div');
-			initialContainer.innerHTML = 'Mytilys Edilus';
-
-			firstFlavorContainer = document.createElement('select');
-			forEach(flavors, function(flavor){
-				var option = document.createElement('option');
-				option.value = flavor._id;
-				option.innerHTML = flavor.name;
-				firstFlavorContainer.appendChild(option);
-			});
-			firstFlavorButton = document.createElement('a');
-			firstFlavorButton.href = "#";
-			firstFlavorButton.innerHTML = '+';
-			firstFlavorButton.addEventListener('click', function(e){
-				e.preventDefault();
-				enterFirstFlavorStage();
-			});
-
-			secondFlavorContainer = document.createElement('select');
-			forEach(flavors, function(flavor){
-				var option = document.createElement('option');
-				option.value = flavor._id;
-				option.innerHTML = flavor.name;
-				secondFlavorContainer.appendChild(option);
-			});
-			secondFlavorButton = document.createElement('a');
-			secondFlavorButton.href = "#";
-			secondFlavorButton.innerHTML = '+';
-			secondFlavorButton.addEventListener('click', function(e){
-				e.preventDefault();
-				enterSecondFlavorStage();
-			});
-
-			feebackContainer = document.createElement('div');
-			
-			ratingContainer = document.createElement('select');
-			forEach([1,2,3,4,5], function(i){
-				var option = document.createElement('option');
-				option.value = i;
-				option.innerHTML = i;
-				ratingContainer.appendChild(option);
-			});
-			feebackContainer.appendChild(ratingContainer);
-
-			commentContainer = document.createElement('input');
-			feebackContainer.appendChild(commentContainer);
-
-			feebackButton = document.createElement('a');
-			feebackButton.href = "#";
-			feebackButton.innerHTML = 'continue';
-			feebackButton.addEventListener('click', function(e){
-				e.preventDefault();
-				enterFeedbackStage();
-			});
-
-			publishButton = document.createElement('a');
-			publishButton.href = "#";
-			publishButton.innerHTML = 'send';
-			publishButton.addEventListener('click', function(e){
-				e.preventDefault();
-				enterPublishStage();
-			});
-
-			enterInitialStage();
+	
 		}
 
-		var enterInitialStage = function(){
+		/*var enterInitialStage = function(){
 			sessionData = {
 				flavorIds: [],
 				userId: user._id,
-				rating: undefined,
+				rating: null,
 				comment: ''
 			}
 
@@ -240,7 +172,7 @@ function (
 
 		var detachFromParentNode = function(element){
 			element.parentNode.removeChild(element);
-		}
+		}*/
 
 		self.setup = setup;
 	}

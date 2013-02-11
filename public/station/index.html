@@ -7,35 +7,119 @@
 				position: absolute;
 				margin: 0;
 				padding: 0;
+				width: 840px;
+			}
+			.combination-selector{
+				position: relative;
+				width: 700px;
+				height: 630px;
+				margin: 70px;
+			}
+			.tabs {
+				position: absolute;
+				top:0;
+				left: 0;
+				width: 70px;
+				height: 100%;
+			}
+			.group-container {
+				position: absolute;
+				top:0;
+				left: 70px;
+			}
+			.names{
+				position: absolute;
+				top: 22.222222%;
+				left: 22.222222%;
+				width: 55.555555%;
+				height: 55.555555%;
+				text-align: center;
+				font-family: Helvetica,Arial,sans-serif;
+				font-weight: bold;
+				font-size: 2em;
+			}
+			.names .main{
+				position: absolute;
+				bottom: 0;
+				width: 60%;
+				margin-bottom: 2em;
+				margin: 0 20% 15%;
+				border-top: solid 6px;
+				padding-top: 5%;
+			}
+			.tab .content {
 				width: 100%;
-				overflow: hidden;
+				height: 130px;
+				-webkit-border-top-left-radius: 35px;
+				-webkit-border-bottom-left-radius: 35px;
+				-moz-border-radius-topleft: 35px;
+				-moz-border-radius-bottomleft: 35px;
+				border-top-left-radius: 35px;
+				border-bottom-left-radius: 35px;
 			}
-			.container {
+			.tab .separator{
 				width: 100%;
-				height: 100px;
-				position: relative;
-				overflow: scroll;
-				-webkit-overflow-scrolling: touch;
+				height: 20px;
+				-moz-border-radius-bottomleft: 35px inset;
+				border-bottom-left-radius: 35px inset;
 			}
-			.elements {
-				width: 2000px;
-				height: 100px;
-				position: relative;
+			.tab .content{
+				background-color: #f00;
 			}
-			.elements2 {
-				width: 4000px;
-				height: 100px;
-				position: relative;
+			.tab.selected .content{
+				background-color: #000;
 			}
-			.item {
-				width: 200px;
-				height: 100px;
-				background-color: red;
+			.group {
+				position: relative;
+				width: 630px;
+				height: 630px;
+			}
+			.flavor {
+				position: relative;
 				float: left;
-				font-size: 50px;
+			}
+			.flavor.selected {
+				-webkit-box-shadow:  0px 0px 0px 5px rgba(0, 0, 0, 1);
+				box-shadow:  0px 0px 0px 5px rgba(0, 0, 0, 1);
+				z-index: 1	;
+			}
+			.cluster {
+				position: absolute;
+			}
+			.cluster:nth-child(2n+1) {
+				width: 77.777777%;
+				height: 22.222222%;
+			}
+			.cluster:nth-child(2n) {
+				height: 77.777777%;
+				width: 22.222222%;
+			}
+			.cluster:nth-child(1) {
+				top:0;
+				left:0;
+			}
+			.cluster:nth-child(2) {
+				top:0;
+				left:77.777777%;
+			}
+			.cluster:nth-child(3) {
+				top:77.777777%;
+				left:22.222222%;
+			}
+			.cluster:nth-child(4) {
+				top:22.222222%;
+				left:0;
+			}
+			.cluster:nth-child(2n+1) .flavor{
+				width: 14.2857143%;
+				height: 100%;
+			}
+			.cluster:nth-child(2n) .flavor{
+				height: 14.2857143%;
+				width: 100%;
 			}
 		</style>
-		<meta name="viewport" content="width=320px; initial-scale=1.0; user-scalable=no" />
+		<meta name="viewport" content="width=840px, user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 

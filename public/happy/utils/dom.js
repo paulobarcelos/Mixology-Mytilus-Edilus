@@ -9,16 +9,22 @@ function(){
 			y: y
 		}
 	}
-	var addClass = function (element, className){
-		element.className += (' ' + className);
+	var hasClass = function (ele,cls) {
+		return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
 	}
-	var removeClass = function (element, className){
-		var re = new RegExp("/(?:^|\s)" + className + "(?!\S)/g","g");
- 	 	element.className.replace(re,'');
+	var addClass = function (ele,cls) {
+		if (!this.hasClass(ele,cls)) ele.className += " "+cls;
+	}
+	var removeClass = function (ele,cls) {
+		if (hasClass(ele,cls)) {
+			var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+			ele.className=ele.className.replace(reg,' ');
+		}
 	}
 
 	return {
 		size: size,
+		hasClass: hasClass,
 		addClass: addClass,
 		removeClass: removeClass,
 	}

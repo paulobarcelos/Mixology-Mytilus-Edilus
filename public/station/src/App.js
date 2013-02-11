@@ -7,6 +7,7 @@ define(
 
 	'happy/_libs/mout/array/forEach',
 
+	'CombinationSelector',
 	'CombinationPublisher'
 ],
 function (
@@ -17,14 +18,18 @@ function (
 
 	forEach,
 
+	CombinationSelector,
 	CombinationPublisher
 ){
 	var App = function(){
 		var 
 		self = this,
 		user,
+		mainFlavor,
 		flavors,
+		flavorGroups,
 		sessionData,
+		combinationSelector,
 		combinationPublisher,
 		mytilusEdilusId = '5112e4e4a5bc689301000001',
 		host = "http://mixology.eu01.aws.af.cm/",
@@ -93,11 +98,30 @@ function (
 		var onFlavorsDataAcquired = function(data){
 			localStorage['flavors'] = data;
 			flavors = JSON.parse(data);
+			mainFlavor = flavors.shift();
+			flavorGroups = parseFlavorGroups(flavors);
 			if(user) onReady();
 		}
+		var parseFlavorGroups = function(flavors){
+			var flavorGroups = {};
+			for (var i = 0; i < flavors.length; i++) {
+				var flavor = flavors[i];
+				for (var j = 0; j < flavor.groups.length; j++) {
+					var group = flavor.groups[j];
+					if(!flavorGroups[group]) flavorGroups[group] = [];
+					flavorGroups[group].push(flavor);
+				}
+			};
+			return flavorGroups;
+		}
 		var onReady = function(){
+			combinationSelector = new CombinationSelector(mainFlavor, flavorGroups);
+			self.container.appendChild(combinationSelector.node);
+
 			combinationPublisher = new CombinationPublisher(host);
 			combinationPublisher.start();
+
+			return;
 
 			mainContainer = document.createElement('div');
 			self.container.appendChild(mainContainer);

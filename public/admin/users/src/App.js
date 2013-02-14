@@ -3,14 +3,14 @@ define(
 	'happy/app/BaseApp',
 
 	'happy/utils/browser',
-	'happy/utils/http',
+	'happy/utils/ajax',
 
 	'happy/_libs/mout/array'
 ],
 function (
 	BaseApp,
 	browser,
-	http,
+	ajax,
 	arrayUtils
 ){
 	var App = function(){
@@ -47,10 +47,10 @@ function (
 		}
 
 		var refresh = function(){
-			http.call({
+			ajax({
 				url: host + 'api/' + action + '?'+(new Date()).getTime() ,
 				onSuccess: function(request){
-					createList(JSON.parse(request.response));
+					createList(JSON.parse(request.responseText));
 				}
 			})
 		}
@@ -93,10 +93,11 @@ function (
 		}
 
 		var add = function(browser){
-			var data = new FormData();
-			data.append("browser", browser);
+			var data = {
+				browser: browser
+			}
 
-			http.call({
+			ajax({
 				url: host + 'api/' + action,
 				method: 'POST',
 				data: data,
@@ -104,11 +105,12 @@ function (
 			});
 		}
 		var update = function(id, browser, created){
-			var data = new FormData();
-			data.append("browser", browser);
-			data.append("created", created);
+			var data = {
+				browser: browser,
+				created: created
+			}
 
-			http.call({
+			ajax({
 				url: host + 'api/' + action + '/' + id,
 				method: 'PUT',
 				data: data,
@@ -116,7 +118,7 @@ function (
 			});
 		}
 		var remove = function(id){
-			http.call({
+			ajax({
 				url: host + 'api/' + action + '/' + id,
 				method: 'DELETE',
 				onSuccess: refresh

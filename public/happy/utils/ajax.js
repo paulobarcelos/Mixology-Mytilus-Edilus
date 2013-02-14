@@ -1,6 +1,10 @@
 define(
-[],
-function(){
+[
+	'happy/polyfill/FormData',
+],
+function(
+	FormData
+){
 	/**
 	* Performs an ajax call, providing callbacks for success and error.
 	* 
@@ -20,7 +24,7 @@ function(){
 		settings.type = settings.type || 'text';
 		settings.context = settings.context || window;
 
-		var request = new XMLHttpRequest();
+		var request;
 		if (window.XMLHttpRequest) {
 			request = new XMLHttpRequest();
 		} else if (window.ActiveXObject) {
@@ -40,21 +44,32 @@ function(){
 				if(settings.onSuccess) settings.onSuccess.apply(settings.context, [request]);
 			}
 			else{
-				if(settings.onError) settings.onError.call(settings.context, [request]);
+				if(settings.onError) settings.onError.apply(settings.context, [request]);
 			}
 		}
 		request.onerror = function(){
-			if(settings.onError) settings.onError.call(settings.context, [request]);
+			if(settings.onError) settings.onError.apply(settings.context, [request]);
 		}
 		request.onabort = function(){
-			if(settings.onError) settings.onError.call(settings.context, [request]);
+			if(settings.onError) settings.onError.apply(settings.context, [request]);
 		}
 		request.ontimeout = function(){
-			if(settings.onError) settings.onError.call(settings.context, [request]);
+			if(settings.onError) settings.onError.apply(settings.context, [request]);
 		}
 		request.open(settings.method, settings.url);
 		request.responseType = settings.type;
-		request.send(settings.data);
+
+		if(settings.data){
+			var formData = new FormData();
+			for(key in settings.data){
+				formData.append(key, settings.data[key]);
+			}
+		}
+		else{
+			var formData;
+		}
+		
+		request.send(formData);
 	}
 
 	return ajax;

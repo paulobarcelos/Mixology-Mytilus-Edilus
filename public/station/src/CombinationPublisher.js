@@ -1,6 +1,6 @@
 define(
 [
-	'happy/utils/http'
+	'happy/utils/ajax'
 ],
 function (
 	http
@@ -41,12 +41,9 @@ function (
 		var publish = function(){
 			if(!combinations.length) return;
 
-			var data = new FormData();
-			for(key in combinations[0]){
-				data.append(key, combinations[0][key]);
-			}
+			var data = combinations[0];
 
-			http.call({
+			ajax({
 				url: host + 'api/combinations',
 				method: 'POST',
 				data: data,

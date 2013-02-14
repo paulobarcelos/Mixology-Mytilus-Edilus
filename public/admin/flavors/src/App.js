@@ -1,14 +1,14 @@
 define(
 [
 	'happy/app/BaseApp',
-	'happy/utils/http',
+	'happy/utils/ajax',
 
 	'happy/_libs/mout/array/forEach',
 	'happy/_libs/mout/array/indexOf'
 ],
 function (
 	BaseApp,
-	http,
+	ajax,
 	forEach,
 	indexOf
 ){
@@ -53,10 +53,10 @@ function (
 		}
 
 		var refresh = function(){
-			http.call({
+			ajax({
 				url: host + 'api/' + action + '?'+(new Date()).getTime() ,
 				onSuccess: function(request){
-					createList(JSON.parse(request.response));
+					createList(JSON.parse(request.responseText));
 				}
 			})
 		}
@@ -110,13 +110,13 @@ function (
 		}
 
 		var add = function(name, color, groups){
-			var data = new FormData();
-			data.append("name", name);
-			data.append("color", color);
-			data.append("groups", groups);
-			console.log(groups)
+			var data = {
+				name: name,
+				color: color,
+				groups: groups
+			}
 
-			http.call({
+			ajax({
 				url: host + 'api/' + action,
 				method: 'POST',
 				data: data,
@@ -124,13 +124,14 @@ function (
 			});
 		}
 		var update = function(id, name, color, groups, created){
-			var data = new FormData();
-			data.append("name", name);
-			data.append("color", color);
-			data.append("groups", groups);
-			data.append("created", created);
+			var data = {
+				name: name,
+				color: color,
+				groups: groups,
+				created: created
+			}
 
-			http.call({
+			ajax({
 				url: host + 'api/' + action + '/' + id,
 				method: 'PUT',
 				data: data,
@@ -138,7 +139,7 @@ function (
 			});
 		}
 		var remove = function(id){
-			http.call({
+			ajax({
 				url: host + 'api/' + action + '/' + id,
 				method: 'DELETE',
 				onSuccess: refresh

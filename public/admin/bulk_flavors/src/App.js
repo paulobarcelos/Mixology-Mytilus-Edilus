@@ -1,14 +1,14 @@
 define(
 [
 	'happy/app/BaseApp',
-	'happy/utils/http',
+	'happy/utils/ajax',
 
 	'happy/_libs/mout/array/forEach',
 	'happy/_libs/mout/array/indexOf'
 ],
 function (
 	BaseApp,
-	http,
+	ajax,
 	forEach,
 	indexOf
 ){
@@ -55,12 +55,13 @@ function (
 		var recursiveAdd = function(flavors){
 			var flavor = flavors[0];
 
-			var data = new FormData();
-			data.append("name", flavor.name);
-			data.append("color", flavor.color);
-			data.append("groups", flavor.groups);
+			var data = {
+				name: flavor.name,
+				color: flavor.color,
+				groups: flavor.groups
+			}			
 
-			http.call({
+			ajax({
 				url: host + 'api/' + action,
 				method: 'POST',
 				data: data,

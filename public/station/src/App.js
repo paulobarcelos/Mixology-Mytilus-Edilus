@@ -3,7 +3,7 @@ define(
 	'happy/app/BaseApp',
 
 	'happy/utils/browser',
-	'happy/utils/http',
+	'happy/utils/ajax',
 
 	'happy/_libs/mout/array/forEach',
 
@@ -17,7 +17,7 @@ function (
 	BaseApp,
 
 	browser,
-	http,
+	ajax,
 
 	forEach,
 
@@ -46,34 +46,37 @@ function (
 			titleNode.innerHTML = "Mytilus Edulis";
 			self.container.appendChild(titleNode);
 
-			var userData = localStorage['user'];
+			var dropCache = (window.location.search.indexOf('dropcache')!=-1);
+
+			var userData = (dropCache) ? null : localStorage['user'];
 			if(userData) onUserDataAcquired(userData);
 			else {
 				var browserInfo = browser.getInfo();
-				var browserFormData = new FormData();
-				browserFormData.append("browser", browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os);
-				
-				http.call({
+				var browserData = {
+					browser: browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os
+				}			
+				ajax({
 					url: host + 'api/users',
-					method: 'POST',
-					data: browserFormData,
+					//method: 'POST',
+					//data: browserData,
 					onSuccess: function(request){
-						onUserDataAcquired(request.response);
+						onUserDataAcquired(request.responseText);
 					},
-					onError: function(){
+					onError: function(request){
 						console.log('Error getting user from server.')
+						console.log(request.status)			
 					}
 				});
 			}
 
-			var flavorsData = localStorage['flavors'];
+			var flavorsData = (dropCache) ? null : localStorage['flavors'];
 			if(flavorsData) onFlavorsDataAcquired(flavorsData);
 			else {
-				http.call({
+				ajax({
 					url: host + 'api/flavors' + '?'+ (new Date()).getTime(),
 					method: 'GET',
 					onSuccess: function(request){
-						onFlavorsDataAcquired(request.response);
+						onFlavorsDataAcquired(request.responseText);
 					},
 					onError: function(){
 						console.log('Error getting flavors from server.')

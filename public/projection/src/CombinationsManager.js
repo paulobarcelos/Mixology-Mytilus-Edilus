@@ -1,13 +1,13 @@
 define(
 [
-	'happy/utils/http',
+	'happy/utils/ajax',
 
 	'happy/_libs/mout/array/forEach',
 	'happy/_libs/mout/object/mixIn',
 	'happy/_libs/signals'
 ],
 function (
-	http,
+	ajax,
 
 	forEach,
 	mixIn,
@@ -35,11 +35,11 @@ function (
 			var flavorsData = (settings.cacheFlavors) ? localStorage['flavors'] : '[]';
 			if(flavorsData) onFlavorDataReady(flavorsData);
 			else {
-				http.call({
+				ajax({
 					url: settings.api + settings.flavors + '?'+ (new Date()).getTime(),
 					method: 'GET',
 					onSuccess: function(request){
-						onFlavorDataReady(request.response);
+						onFlavorDataReady(request.responseText);
 					},
 					onError: function(){
 						console.log('Error getting flavors from server.')
@@ -61,11 +61,11 @@ function (
 		}
 		var fetchCombinations = function(){
 
-			http.call({
+			ajax({
 				url: settings.api + settings.combinations + '?'+ (new Date()).getTime(),
 				method: 'GET',
 				onSuccess: function(request){
-					parseCombinations(request.response);
+					parseCombinations(request.responseText);
 					setTimeout(fetchCombinations, 5000);
 					
 				},

@@ -24,16 +24,6 @@ function (
 
 			node = document.createElement('div');
 			dom.addClass(node, 'tab');
-
-			var content = document.createElement('div');
-			dom.addClass(content, 'content');
-			content.innerHTML = groupId;
-
-			var separator = document.createElement('div');
-			dom.addClass(separator, 'separator');
-
-			node.appendChild(content);
-			node.appendChild(separator);
 			var isTouch = 'ontouchstart' in document.documentElement;
 			node.addEventListener((isTouch) ? 'touchstart':'click', onClick);		
 		}
@@ -66,6 +56,7 @@ function (
 			return deselectedSignal;
 		}
 		var onClick = function(){
+			document.activeElement.blur();
 			select();
 		}
 

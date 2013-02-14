@@ -67,6 +67,7 @@ function (
 			return deselectedSignal;
 		}
 		var onClick = function(){
+			document.activeElement.blur();
 			if(!active) return;
 			if(selected) deselect();
 			else select();

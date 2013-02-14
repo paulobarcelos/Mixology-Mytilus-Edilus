@@ -13,7 +13,7 @@ function(){
 	*	settings.data {String} - URL encoded data string. @default null
 	* @returns null
 	**/
-	var call = function(settings){
+	var ajax = function(settings){
 		if(!settings) return;
 		if(!settings.url) return;
 		settings.method = settings.method || 'GET';
@@ -57,7 +57,5 @@ function(){
 		request.send(settings.data);
 	}
 
-	return {
-		call: call
-	}
+	return ajax;
 });

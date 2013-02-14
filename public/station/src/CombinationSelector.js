@@ -18,7 +18,7 @@ function (
 	FlavorGroup
 
 ){
-	var CombinationSelector = function(mainFlavor, groups){
+	var CombinationSelector = function(flavors){
 		var 
 		self = this,
 		node,
@@ -29,18 +29,23 @@ function (
 		simpleFlavorsNamesNode,
 		mainFlavorNameNode,
 
+		mainFlavor,
+		groups,
 		groupSelectors,
 		flavorGroups,
 
 		selected,
 		ready,
 		readySignal,
-		unReadySignal,
+		unreadySignal,
 		changedSignal;
 
 		var init = function(){
 			node = document.createElement('div');
 			dom.addClass(node, 'combination-selector');
+
+			mainFlavor = flavors.shift();
+			groups = parseFlavors(flavors);
 
 			groupSelectorsNode = document.createElement('div');
 			dom.addClass(groupSelectorsNode, 'tabs');
@@ -82,12 +87,8 @@ function (
 
 			}
 
-			for(id in groups){
-				groupSelectors[id].select();
-				break;
-			}
+			reset();
 		}
-
 		var onGroupSelected = function(group){
 			for(id in groups){
 				if(id != group.id) groupSelectors[id].deselect();
@@ -99,17 +100,15 @@ function (
 			selected = flavorGroups[group.id].selected;
 			processChange();
 		}
-
 		var onFlavorGroupChanged = function (flavorGroup) {
 			selected = flavorGroup.selected;
 			processChange();
 		}
-
 		var processChange = function(){
 			dom.empty(simpleFlavorsNamesNode);
-			forEach(selected, function(flavorSelector){
+			forEach(selected, function(flavor){
 				var nameNode = document.createElement('div');
-				nameNode.innerHTML = flavorSelector.flavor.name;
+				nameNode.innerHTML = flavor.name;
 				simpleFlavorsNamesNode.appendChild(nameNode);
 			});
 
@@ -128,13 +127,65 @@ function (
 
 			changedSignal.dispatch(self);
 		}
-
+		var parseFlavors = function(flavors){
+			var groups = {};
+			for (var i = 0; i < flavors.length; i++) {
+				var flavor = flavors[i];
+				for (var j = 0; j < flavor.groups.length; j++) {
+					var group = flavor.groups[j];
+					if(!groups[group]) groups[group] = [];
+					groups[group].push(flavor);
+				}
+			};
+			return groups;
+		}
+		var reset = function () {
+			for(id in groups){
+				flavorGroups[id].reset();
+			}
+			for(id in groups){
+				groupSelectors[id].select();
+				break;
+			}
+		}
 		var getNode = function(){
 			return node;
 		}
+		var getReady = function(){
+			return ready;
+		}
+		var getReadySignal = function(){
+			return readySignal;
+		}
+		var getUnreadySignal = function(){
+			return unreadySignal;
+		}
+		var getSelected = function(){
+			var ids = [];
+			ids.push(mainFlavor._id);
+			for (var i = 0; i < selected.length; i++) {
+				ids.push(selected[i]._id);
+			};
+			return ids;
+		}
 
+		Object.defineProperty(self, 'reset', {
+			value: reset
+		});
 		Object.defineProperty(self, 'node', {
 			get: getNode
+		});
+		Object.defineProperty(self, 'ready', {
+			get: getReady
+		});
+		Object.defineProperty(self, 'readySignal', {
+			get: getReadySignal
+		});
+		Object.defineProperty(self, 'unreadySignal', {
+			get: getUnreadySignal
+		});
+		Object.defineProperty(self, 'selected', {
+			get: getSelected
 		});
 
 		init();

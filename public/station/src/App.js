@@ -8,6 +8,9 @@ define(
 	'happy/_libs/mout/array/forEach',
 
 	'CombinationSelector',
+	'RatingSelector',
+	'CommentSelector',
+	'EndScreen',
 	'CombinationPublisher'
 ],
 function (
@@ -19,40 +22,29 @@ function (
 	forEach,
 
 	CombinationSelector,
+	RatingSelector,
+	CommentSelector,
+	EndScreen,
 	CombinationPublisher
 ){
 	var App = function(){
 		var 
 		self = this,
 		user,
-		mainFlavor,
 		flavors,
-		flavorGroups,
-		sessionData,
-		combinationSelector,
 		combinationPublisher,
-		mytilusEdilusId = '5112e4e4a5bc689301000001',
-		host = "http://mixology.eu01.aws.af.cm/",
-
-		mainContainer,
-
-		initialContainer,
-
-		firstFlavorContainer,
-		firstFlavorButton,
-
-		secondFlavorContainer,
-		secondFlavorButton,
-
-		feebackContainer,
-		ratingContainer,
-		commentContainer,
-		feebackButton,
-
-		publishButton;
+		combinationSelector,
+		ratingSelector,
+		endScreen,
+		commentSelector,
+		host = "http://mixology.eu01.aws.af.cm/";
 
 		var setup = function(){	
 			self.setFPS(0);
+
+			var titleNode = document.createElement('h1');
+			titleNode.innerHTML = "Mytilus Edulis";
+			self.container.appendChild(titleNode);
 
 			var userData = localStorage['user'];
 			if(userData) onUserDataAcquired(userData);
@@ -88,91 +80,70 @@ function (
 					}
 				});
 			}
+
+			window.addEventListener("load", hideAddressBar );
+			window.addEventListener("orientationchange", hideAddressBar );
+			hideAddressBar();
 		}
 
 		var onUserDataAcquired = function(data){
 			localStorage['user'] = data;
 			user = JSON.parse(data);
-			if(flavors) onReady();
+			if(flavors) init();
 		}
 		var onFlavorsDataAcquired = function(data){
 			localStorage['flavors'] = data;
 			flavors = JSON.parse(data);
-			mainFlavor = flavors.shift();
-			flavorGroups = parseFlavorGroups(flavors);
-			if(user) onReady();
+			if(user) init();
 		}
-		var parseFlavorGroups = function(flavors){
-			var flavorGroups = {};
-			for (var i = 0; i < flavors.length; i++) {
-				var flavor = flavors[i];
-				for (var j = 0; j < flavor.groups.length; j++) {
-					var group = flavor.groups[j];
-					if(!flavorGroups[group]) flavorGroups[group] = [];
-					flavorGroups[group].push(flavor);
-				}
-			};
-			return flavorGroups;
-		}
-		var onReady = function(){
-			combinationSelector = new CombinationSelector(mainFlavor, flavorGroups);
+		
+		var init = function(){
+			combinationSelector = new CombinationSelector(flavors);
 			self.container.appendChild(combinationSelector.node);
+
+			ratingSelector = new RatingSelector();
+			self.container.appendChild(ratingSelector.node);
+
+			commentSelector = new CommentSelector();
+			self.container.appendChild(commentSelector.node);
+			commentSelector.sendSignal.add(onSend);
+
+			endScreen = new EndScreen(self.container);
 
 			combinationPublisher = new CombinationPublisher(host);
 			combinationPublisher.start();
-
-	
 		}
 
-		/*var enterInitialStage = function(){
-			sessionData = {
-				flavorIds: [],
+		var onSend = function (commentSelector) {
+			var data = {
+				flavorIds: combinationSelector.selected,
 				userId: user._id,
-				rating: null,
-				comment: ''
+				rating: ratingSelector.value,
+				comment: commentSelector.value
 			}
-
-			while (mainContainer.hasChildNodes()) mainContainer.removeChild(mainContainer.lastChild);
-			mainContainer.appendChild(initialContainer);
-			mainContainer.appendChild(firstFlavorButton);
-
-		}
-		var enterFirstFlavorStage = function(){
-			sessionData.flavorIds.push(mytilusEdilusId);
-			
-			while (mainContainer.hasChildNodes()) mainContainer.removeChild(mainContainer.lastChild);
-			mainContainer.appendChild(firstFlavorContainer);
-			mainContainer.appendChild(secondFlavorButton);
-		}
-		var enterSecondFlavorStage = function(){
-			sessionData.flavorIds.push(firstFlavorContainer.value);
-			
-			while (mainContainer.hasChildNodes()) mainContainer.removeChild(mainContainer.lastChild);
-			mainContainer.appendChild(secondFlavorContainer);
-			mainContainer.appendChild(feebackButton);
-		}
-		var enterFeedbackStage = function(){
-			sessionData.flavorIds.push(secondFlavorContainer.value);
-			
-			while (mainContainer.hasChildNodes()) mainContainer.removeChild(mainContainer.lastChild);
-			mainContainer.appendChild(ratingContainer);
-			mainContainer.appendChild(commentContainer);
-			mainContainer.appendChild(publishButton);
+			if(data.flavorIds.length < 3){
+				alert("You need to selected the ingredients first!");
+			}
+			else onComplete(data);
 		}
 
-		var enterPublishStage = function(){
-			sessionData.rating = ratingContainer.value;
-			sessionData.comment = commentContainer.value;
-			combinationPublisher.add(sessionData);
-
-			while (mainContainer.hasChildNodes()) mainContainer.removeChild(mainContainer.lastChild);
-
-			enterInitialStage();
+		var onComplete = function(data) {
+			combinationPublisher.add(data);
+			combinationSelector.reset();
+			ratingSelector.reset();
+			commentSelector.reset();
+			hideAddressBar();
+			endScreen.go(data.rating);
 		}
 
-		var detachFromParentNode = function(element){
-			element.parentNode.removeChild(element);
-		}*/
+		var hideAddressBar = function (){
+			if(document.height <= window.outerHeight + 10) {
+				setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+			}
+			else {
+				setTimeout( function(){ window.scrollTo(0, 1); }, 0 );
+			}
+		}
 
 		self.setup = setup;
 	}

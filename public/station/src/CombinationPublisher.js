@@ -33,7 +33,6 @@ function (
 
 			combinations.push(clone);
 			combinationsString = JSON.stringify(combinations);
-			console.log(combinationsString);
 			localStorage['combinations'] = combinationsString;
 
 			if(combinations.length == 1) publish()

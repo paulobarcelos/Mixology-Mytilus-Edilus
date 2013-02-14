@@ -2,12 +2,22 @@
 <html>
 	<head>
 		<title>Mytilus Edilus</title>
-		<link rel="stylesheet" href="/station/dist/style.css">
+		<link rel="stylesheet" href="/station/src/style.css">
 		<meta name="viewport" content="width=640px, user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />		
 	</head>
 	<body>
-		<script data-main="/station/dist/main.js" src="/station/libs/require.js"></script>
+		<script data-main="/station/src/main.js" src="/station/libs/require.js"></script>
+		<script>
+			require.config({
+				urlArgs: (new Date()).getTime()
+			});
+			require({
+				paths: {
+					happy: "/happy"
+				}
+			});
+		</script>
 	</body>
 </html>

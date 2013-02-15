@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Audio App</title>
+		<title>Flavors</title>
 		<style>
 			body{
 				position: fixed;
@@ -14,12 +14,14 @@
 		</style>
 	</head>
 	<body>
-		<script data-main="src/main.js" src="libs/require.js"></script>
+		<script data-main="/admin/bulk_flavors/src/main.js" src="/admin/bulk_flavors/libs/require.js"></script>
 		<script>
+			require.config({
+				urlArgs: (new Date()).getTime()
+			});
 			require({
 				paths: {
-					happy: "../../../happy",
-					plugins: "../libs/require/",
+					happy: "/happy"
 				}
 			});
 		</script>

@@ -2,7 +2,7 @@ define(
 [
 	'../utils/dom',
 	'../utils/vendorPrefix',
-	'../_libs/amd-utils/object/merge',
+	'../_libs/mout/object/merge',
 	'../_libs/stats'
 ], 
 function (
@@ -155,7 +155,14 @@ function (
 			if(value < 0) value = 0;
 			switch(value){
 				case 'auto':
-					currentRequestUpdate = requestAnimationFrame;
+					if(requestAnimationFrame){
+						currentRequestUpdate = requestAnimationFrame;
+					}
+					else{
+						currentRequestUpdate = function(request){
+							setTimeout(request, 1000 / value);
+						}
+					}					
 					break;
 				case 0:
 					currentRequestUpdate = function(request){}

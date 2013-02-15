@@ -1,7 +1,7 @@
 define(
 [
 	'happy/audio/Sound',
-	'happy/utils/http',
+	'happy/utils/ajax',
 ],
 function
 (
@@ -45,7 +45,7 @@ function
 				options.onSuccess.apply(options.context, [argument]);
 			}
 
-			http.call({
+			ajax({
 				url: options.url,
 				type: 'arraybuffer',
 				onSuccess: function(request){

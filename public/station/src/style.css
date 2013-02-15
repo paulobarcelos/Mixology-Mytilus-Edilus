@@ -21,9 +21,9 @@ body{
 	overflow: hidden;
 }
 * {
-    -webkit-user-select: none;
+   /* -webkit-user-select: none;
     -moz-user-select: none;
-    user-select: none;
+    user-select: none;*/
 }
 h1{
 	width: 100%;

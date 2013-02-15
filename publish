@@ -5,3 +5,7 @@ cd $SRC_DIR
 ./public/station/build/build
 
 af update mytilus-edulis
+
+git add -A
+git commit -m "./publish script commit"
+git push heroku master

@@ -17,7 +17,7 @@ function (
 		var 
 		self = this,
 		container,
-		host = "http://mixology.eu01.aws.af.cm/",
+		host = "http://mixology.eu01.aws.af.cm/"
 		action = 'users'; 
 
 		var setup = function(){	
@@ -96,11 +96,11 @@ function (
 			var data = {
 				browser: browser
 			}
-
 			ajax({
 				url: host + 'api/' + action,
 				method: 'POST',
-				data: data,
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
 				onSuccess: refresh
 			});
 		}
@@ -113,7 +113,8 @@ function (
 			ajax({
 				url: host + 'api/' + action + '/' + id,
 				method: 'PUT',
-				data: data,
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
 				onSuccess: refresh
 			});
 		}

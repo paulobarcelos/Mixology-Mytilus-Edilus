@@ -64,7 +64,8 @@ function (
 			ajax({
 				url: host + 'api/' + action,
 				method: 'POST',
-				data: data,
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
 				onSuccess: function(){
 					flavors.shift();
 					recursiveAdd(flavors);

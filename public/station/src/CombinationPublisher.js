@@ -3,7 +3,7 @@ define(
 	'happy/utils/ajax'
 ],
 function (
-	http
+	ajax
 ){
 	var CombinationPublisher = function(host){
 		var 
@@ -43,10 +43,11 @@ function (
 
 			var data = combinations[0];
 
-			ajax({
+			/*ajax({
 				url: host + 'api/combinations',
 				method: 'POST',
-				data: data,
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
 				onSuccess: function(request){
 					// remove from the queue and keep publishing!
 					combinations.shift();
@@ -59,7 +60,29 @@ function (
 					// wait a bit and repeat!
 					setTimeout(publish, 3000);
 				}
-			});
+			});*/
+
+			$.ajax({
+				url: host + 'api/combinations',
+				type: "POST",
+				contentType: 'application/json',
+				dataType: 'json',
+				processData: false,
+				async: false,
+				data: JSON.stringify(data),
+				success: function(reponse){
+					// remove from the queue and keep publishing!
+					combinations.shift();
+					combinationsString = JSON.stringify(combinations);
+					localStorage['combinations'] = combinationsString;
+					
+					setTimeout(publish, 5000);
+				},
+				error: function(){
+					// wait a bit and repeat!
+					setTimeout(publish, 5000);
+				}
+			})
 		}
 
 		Object.defineProperty(self, 'start', {

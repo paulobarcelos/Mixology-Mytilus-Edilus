@@ -171,7 +171,8 @@ function (
 			ajax({
 				url: host + 'api/' + action,
 				method: 'POST',
-				data: data,
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
 				onSuccess: refresh
 			});
 		}
@@ -179,7 +180,8 @@ function (
 			ajax({
 				url: host + 'api/' + action + '/' + id,
 				method: 'PUT',
-				data: data,
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
 				onSuccess: refresh
 			});
 		}

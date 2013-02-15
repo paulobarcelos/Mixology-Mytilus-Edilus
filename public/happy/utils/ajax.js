@@ -21,7 +21,7 @@ function(
 		if(!settings) return;
 		if(!settings.url) return;
 		settings.method = settings.method || 'GET';
-		settings.type = settings.type || 'text';
+		settings.headers = settings.headers || {};
 		settings.context = settings.context || window;
 
 		var request;
@@ -57,19 +57,10 @@ function(
 			if(settings.onError) settings.onError.apply(settings.context, [request]);
 		}
 		request.open(settings.method, settings.url);
-		request.responseType = settings.type;
-
-		if(settings.data){
-			var formData = new FormData();
-			for(key in settings.data){
-				formData.append(key, settings.data[key]);
-			}
+		for(key in settings.headers){
+			request.setRequestHeader(key, settings.headers[key]);
 		}
-		else{
-			var formData;
-		}
-		
-		request.send(formData);
+		request.send(settings.data);
 	}
 
 	return ajax;

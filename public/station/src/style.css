@@ -34,9 +34,9 @@ h1{
 }
 .combination-selector{
 	position: relative;
-	width: 560px;
-	height: 500px;
-	margin: 40px;
+	width: 580px;
+	height: 520px;
+	margin: 20px 40px;
 }
 .group {
 	position: relative;
@@ -47,9 +47,14 @@ h1{
 	position: absolute;
 	top:0;
 	left: 60px;
-	-moz-box-shadow: 0 0 0 10px #000;
+	/*-moz-box-shadow: 0 0 0 10px #000;
 	-webkit-box-shadow: 0 0 0 10px #000;
-	box-shadow: 0 0 0 10px #000;
+	box-shadow: 0 0 0 10px #000;*/
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: solid 10px #000;
+	background-color: #000;
 }
 .tabs {
 	position: absolute;
@@ -62,9 +67,6 @@ h1{
 	width: 100%;
 	height: 18%;
 	margin-top: 57%;
-	-moz-box-shadow: 0 0 0 10px #000;
-	-webkit-box-shadow: 0 0 0 10px #000;
-	box-shadow: 0 0 0 10px #000;
 	text-align: center;
 	line-height: 100%;
 	font-family: Helvetica, Arial, sans-serif;
@@ -74,8 +76,19 @@ h1{
 	background-color: #fff;
 	background-repeat: no-repeat;
 	background-position-y: 50%;
-	background-position-x: 28%;
-	background-size: 76%;
+	background-position-x: 40%;
+	background-size: 80%;
+
+	/*-moz-box-shadow: 0 0 0 10px #000;
+	-webkit-box-shadow: 0 0 0 10px #000;
+	box-shadow: 0 0 0 10px #000;*/
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border-top: solid 10px #000;
+	border-bottom: solid 10px #000;
+	border-left: solid 10px #000;
 }
 .tab:nth-child(1){
 	margin-top: 30%;
@@ -116,9 +129,13 @@ h1{
 	height: 40%;
 	text-align: center;
 	font-size: 1.6em;
-	-moz-box-shadow: inset 0 0 0 1px #000;
+	/*-moz-box-shadow: inset 0 0 0 1px #000;
 	-webkit-box-shadow: inset 0 0 0 1px #000;
-	box-shadow: inset 0 0 0 1px #000;
+	box-shadow: inset 0 0 0 1px #000;*/
+	box-sizing: border-box;*
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: solid 1px #000;
 	line-height: 1em;
 	background-color: #fff;
 }
@@ -157,20 +174,32 @@ h1{
 .flavor {
 	position: relative;
 	float: left;
-	-moz-box-shadow: inset 0 0 0 1px #000;
+	/*-moz-box-shadow: inset 0 0 0 1px #000;
 	-webkit-box-shadow: inset 0 0 0 1px #000;
-	box-shadow: inset 0 0 0 1px #000;
+	box-shadow: inset 0 0 0 1px #000;*/
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: solid 1px #000;
 }
 .flavor.selected {
-	-moz-box-shadow:inset  0 0 0 15px #000;
+	/*-moz-box-shadow:inset  0 0 0 15px #000;
 	-webkit-box-shadow:inset  0 0 0 15px #000;
 	box-shadow:inset  0 0 0 15px #000;
-	z-index: 1	;
+	z-index: 1;*/
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	border: solid 15px #000;
 
 	-webkit-animation-duration: 1s;
-  -webkit-animation-name: glow;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-direction: alternate;		
+	-webkit-animation-name: glow;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-direction: alternate;		
+}
+.no-box-shadow .flavor {
+	border: solid 1px #000;
 }
 .cluster {
 	position: absolute;
@@ -184,19 +213,19 @@ h1{
 	width: 30%;
 }
 .cluster:nth-child(1) {
-	top:70%;
-	left:30%;
+	bottom:0;
+	right:0;
 }
 .cluster:nth-child(2) {
 	top:0;
-	left:70%;
+	right:0;;
 }
 .cluster:nth-child(3) {
 	top:0;
 	left:0;
 }
 .cluster:nth-child(4) {
-	top:30%;
+	bottom:0;
 	left:0;
 }
 .cluster:nth-child(2n+1) .flavor{
@@ -291,14 +320,16 @@ h1{
 
 @-webkit-keyframes glow {
   from {
-  	-moz-box-shadow: inset 0 0 0 5px #000;
+  	/*-moz-box-shadow: inset 0 0 0 5px #000;
 	-webkit-box-shadow: inset 0 0 0 5px #000;
-	box-shadow: inset 0 0 0 5px #000;
+	box-shadow: inset 0 0 0 5px #000;*/
+	border: solid 5px #000;
   }
  
   to {
-  	-moz-box-shadow:inset  0 0 0 15px #000;
+  	/*-moz-box-shadow:inset  0 0 0 15px #000;
 	-webkit-box-shadow:inset  0 0 0 15px #000;
-	box-shadow:inset  0 0 0 15px #000;
+	box-shadow:inset  0 0 0 15px #000;*/
+	border: solid 15px #000;
   }
 }

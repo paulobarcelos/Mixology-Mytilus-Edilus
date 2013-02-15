@@ -2,8 +2,9 @@ define(
 [
 	'happy/app/BaseApp',
 
-	'happy/utils/browser',
 	'happy/utils/ajax',
+	'happy/utils/browser',
+	'happy/utils/dom',
 
 	'happy/_libs/mout/array/forEach',
 
@@ -16,8 +17,9 @@ define(
 function (
 	BaseApp,
 
-	browser,
 	ajax,
+	browser,
+	dom,
 
 	forEach,
 
@@ -42,60 +44,85 @@ function (
 		var setup = function(){	
 			self.setFPS(0);
 
+
 			var titleNode = document.createElement('h1');
 			titleNode.innerHTML = "Mytilus Edulis";
 			self.container.appendChild(titleNode);
 
-			var dropCache = (window.location.search.indexOf('dropcache')!=-1);
+			var dropcache = (window.location.search.indexOf('dropcache')!=-1);
+			if(dropcache){
+				localStorage.removeItem('user'); 
+				localStorage.removeItem('flavors'); 
+			}
 
-			var userData = (dropCache) ? null : localStorage['user'];
+			var userData = localStorage.getItem('user'); 
 			if(userData) onUserDataAcquired(userData);
-			else {
-				var browserInfo = browser.getInfo();
-				var browserData = {
-					browser: browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os
-				}			
-				ajax({
-					url: host + 'api/users',
-					//method: 'POST',
-					//data: browserData,
-					onSuccess: function(request){
-						onUserDataAcquired(request.responseText);
-					},
-					onError: function(request){
-						console.log('Error getting user from server.')
-						console.log(request.status)			
-					}
-				});
-			}
+			else loadUserData();
 
-			var flavorsData = (dropCache) ? null : localStorage['flavors'];
+			var flavorsData = localStorage.getItem('flavors'); 
 			if(flavorsData) onFlavorsDataAcquired(flavorsData);
-			else {
-				ajax({
-					url: host + 'api/flavors' + '?'+ (new Date()).getTime(),
-					method: 'GET',
-					onSuccess: function(request){
-						onFlavorsDataAcquired(request.responseText);
-					},
-					onError: function(){
-						console.log('Error getting flavors from server.')
-					}
-				});
-			}
+			else loadFlavorsData();
 
 			window.addEventListener("load", hideAddressBar );
 			window.addEventListener("orientationchange", hideAddressBar );
 			hideAddressBar();
 		}
 
+		var loadUserData = function(){
+			var browserInfo = browser.getInfo();
+			var data = {
+				browser: browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os
+			}			
+			/*ajax({
+				url: host + 'api/users',
+				method: 'POST',
+				headers: {'Content-type': 'application/json'},
+				data: JSON.stringify(data),
+				onSuccess: function(request){
+					onUserDataAcquired(request.responseText);
+				},
+				onError: function(request){
+					console.log('Error getting user from server.')
+					console.log(request.status)			
+				}
+			});*/
+
+			$.ajax({
+				url: host + 'api/users',
+				type: "POST",
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify(data),
+				success: function(reponse){
+					onUserDataAcquired(JSON.stringify(reponse));
+				},
+				error: function(){
+					console.log('Error getting user from server.')
+					setTimeout(loadUserData, 2000);
+				}
+			})
+		}
+		var loadFlavorsData = function(){
+			ajax({
+				url: host + 'api/flavors' + '?'+ (new Date()).getTime(),
+				method: 'GET',
+				onSuccess: function(request){
+					onFlavorsDataAcquired(request.responseText);
+				},
+				onError: function(){
+					console.log('Error getting flavors from server.')
+					setTimeout(loadFlavorsData, 2000);
+				}
+			});
+		}
+
 		var onUserDataAcquired = function(data){
-			localStorage['user'] = data;
+			localStorage.setItem('user', data); 
 			user = JSON.parse(data);
 			if(flavors) init();
 		}
 		var onFlavorsDataAcquired = function(data){
-			localStorage['flavors'] = data;
+			localStorage.setItem('flavors', data); 
 			flavors = JSON.parse(data);
 			if(user) init();
 		}

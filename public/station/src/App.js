@@ -91,6 +91,7 @@ function (
 				url: host + 'api/users',
 				type: "POST",
 				dataType: 'json',
+				contentType: 'application/json',
 				async: false,
 				data: JSON.stringify(data),
 				success: function(reponse){

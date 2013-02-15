@@ -4,8 +4,14 @@ cd $SRC_DIR
 
 ./public/station/build/build
 
+af login
+mixology.mytilusedulis@gmail.commit
+5tghy67uj
 af update mytilus-edulis
 
+heroku login
+mixology.mytilusedulis@gmail.commit
+5tghy67uj
 git add -A
 git commit -m "./publish script commit"
 git push heroku master

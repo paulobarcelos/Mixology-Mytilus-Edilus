@@ -31,7 +31,7 @@ function (
 			browserField.placeholder = 'browser';
 			formContainer.appendChild(browserField);
 			var browserInfo = browser.getInfo();
-			browserField.value = browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os;
+			browserField.value = browserInfo.name + '_' + browserInfo.version + '_' + browserInfo.os;
 
 			var addBtn = document.createElement('button');
 			addBtn.innerHTML = 'add';

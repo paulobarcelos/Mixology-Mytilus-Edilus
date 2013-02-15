@@ -13,6 +13,12 @@ body{
 	padding: 0;
 	width: 640px;
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAP0lEQVQYlX3O0QkAQAgCUGsL99+txuh+giKu/JOHoJgZWkj2qoe5ux5W668lbwZAImKzeW0YST2s1l9L3gzAA9CaIMLQrLuAAAAAAElFTkSuQmCC);
+	overflow: hidden;
+}
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 h1{
 	width: 100%;

@@ -9,18 +9,16 @@ mx
 
 html{
 	position: relative;
-	width: 100%;
-	height: 100%;
+	width: 640px;
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
 body{
-	position: relative;
-	width: 100%;
-	height: 100%;
 	margin: 0;
 	padding: 0;
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAP0lEQVQYlX3O0QkAQAgCUGsL99+txuh+giKu/JOHoJgZWkj2qoe5ux5W668lbwZAImKzeW0YST2s1l9L3gzAA9CaIMLQrLuAAAAAAElFTkSuQmCC);
+	overflow: hidden;
 }
 * {
    /* -webkit-user-select: none;
@@ -47,21 +45,19 @@ h1{
 }
 .combination-selector{
 	position: relative;
-	width: 90%;
-	height: 65%;
-	margin: 3% 6%;
+	width: 580px;
+	height: 520px;
+	margin: 20px 40px;
 }
 .group {
 	position: relative;
-	width: 100%;
-	height: 100%;
+	width: 500px;
+	height: 500px;
 }
 .group-container {
 	position: absolute;
 	top:0;
-	right: 0;
-	width: 90%;
-	height: 100%;
+	left: 60px;
 	/*-moz-box-shadow: 0 0 0 10px #000;
 	-webkit-box-shadow: 0 0 0 10px #000;
 	box-shadow: 0 0 0 10px #000;*/
@@ -75,7 +71,7 @@ h1{
 	position: absolute;
 	top:0;
 	left: 0;
-	width: 10%;
+	width: 60px;
 	height: 100%;
 }
 .tab  {

@@ -71,7 +71,7 @@ function (
 		var loadUserData = function(){
 			var browserInfo = browser.getInfo();
 			var data = {
-				browser: browserInfo.name + '::' + browserInfo.version + '::' + browserInfo.os
+				browser: browserInfo.name + '_' + browserInfo.version + '_' + browserInfo.os
 			}			
 			/*ajax({
 				url: host + 'api/users',

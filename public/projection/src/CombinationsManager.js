@@ -20,87 +20,103 @@ function (
 		defaults = {
 			api : 'http://mixology.org/api/',
 			flavors : 'flavors',
-			combinations : 'combinations',
-			cacheFlavors: true,
-			mainFlavorId : '0'
+			combinations : 'combinations'
 		},
-		settings = mixIn({}, defaults, options),
-		flavors = [],
-		flavorsIndexedById = {},
-		combinations = [],
-		combinationsTree = [],
-		updatedSignal = new Signal();
+		settings,
+		flavors,
+		flavorsById,
+		combinations,
+		updatedSignal;
 
-		var init = function(){	
-			var flavorsData = (settings.cacheFlavors) ? localStorage['flavors'] : '[]';
-			if(flavorsData) onFlavorDataReady(flavorsData);
-			else {
-				ajax({
-					url: settings.api + settings.flavors + '?'+ (new Date()).getTime(),
-					method: 'GET',
-					onSuccess: function(request){
-						onFlavorDataReady(request.responseText);
-					},
-					onError: function(){
-						console.log('Error getting flavors from server.')
-					}
-				});
-			}
+		var init = function(){
+			settings = mixIn({}, defaults, options);
+			flavors = [];
+			flavorsById = {};
+			combinations = [];;
+			updatedSignal = new Signal();
+
+			loadFlavorsData();
 		}
-
-		var onFlavorDataReady = function(data){
-			if(settings.cacheFlavors){
-				localStorage['flavors'] = data;
-			}
+		var loadFlavorsData = function(){
+			ajax({
+				url: settings.api + settings.flavors + '?'+ (new Date()).getTime(),
+				method: 'GET',
+				onSuccess: function(request){
+					onFlavorsDataAcquired(request.responseText);
+				},
+				onError: function(){
+					console.log('Error getting flavors from server.')
+					setTimeout(loadFlavorsData, 5000);
+				}
+			});
+		}
+		var onFlavorsDataAcquired = function(data){
 			flavors = JSON.parse(data);
-			flavorsIndexedById = {};
+			flavorsById = {};
 			forEach(flavors, function(flavor){
-				flavorsIndexedById[flavor._id] = flavor;
+				flavorsById[flavor._id] = flavor;
 			});
 			fetchCombinations();
 		}
 		var fetchCombinations = function(){
+			var query = {
+				cacheBuster: (new Date()).getTime()
+			}
+
+			if(combinations.length){
+				query.search = {
+					created: {
+						$gt: combinations[combinations.length-1].created
+					}
+				} 
+			}
+			var queryString = '?';
+			for(key in query){
+				queryString +=  key + '=' + encodeURIComponent(JSON.stringify(query[key])) + '&';
+			}
 
 			ajax({
-				url: settings.api + settings.combinations + '?'+ (new Date()).getTime(),
+				url: settings.api + settings.combinations + queryString,
 				method: 'GET',
 				onSuccess: function(request){
 					parseCombinations(request.responseText);
-					setTimeout(fetchCombinations, 5000);
+					setTimeout(fetchCombinations, 10000);
 					
 				},
 				onError: function(){
 					console.log('Error getting combinations from server.');
-					setTimeout(fetchCombinations, 5000);
+					setTimeout(fetchCombinations, 10000);
 					
 				}
 			});
 		}
 		var parseCombinations = function(json){
-			var rawCombinations = JSON.parse(json);
-			if(rawCombinations.length == combinations.length) return;
+			var newCombinations = JSON.parse(json);
+			if(!newCombinations.length) return
 
-			combinations = rawCombinations;
-			forEach(combinations, function(combination){
+			var parsedNewCombinations = [];
+			forEach(newCombinations, function(combination){
 				combination.flavors = [];
 				for (var i = combination.flavorIds.length - 1; i >= 0; i--) {
-					var flavor = flavorsIndexedById[combination.flavorIds[i]];
+					var id = combination.flavorIds[i];
+					var flavor = flavorsById[id];
 					combination.flavors.push(flavor);
 				};
+				combinations.push(combination);
+				parsedNewCombinations.push(combination)
 			});
 
-
-			updatedSignal.dispatch(self);
+			updatedSignal.dispatch(self, parsedNewCombinations);
 		}
 
 		var getFlavors = function(){
 			return flavors;
 		}
+		var getFlavorsById = function(){
+			return flavorIds;
+		}
 		var getCombinations = function(){
 			return combinations;
-		}
-		var getCombinationsTree = function(){
-			return combinationsTree;
 		}
 		var getUpdatedSignal = function(){
 			return updatedSignal;
@@ -112,15 +128,17 @@ function (
 		Object.defineProperty(self, 'flavors', {
 			get: getFlavors
 		});
+		Object.defineProperty(self, 'flavorsById', {
+			get: getFlavorsById
+		});
 		Object.defineProperty(self, 'combinations', {
 			get: getCombinations
-		});
-		Object.defineProperty(self, 'combinationsTree', {
-			get: getCombinationsTree
 		});
 		Object.defineProperty(self, 'updatedSignal', {
 			get: getUpdatedSignal
 		});
+
+		init();
 	}
 	return CombinationsManager;
 });

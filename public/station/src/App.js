@@ -101,7 +101,7 @@ function (
 				type: "POST",
 				dataType: 'json',
 				contentType: 'application/json',
-				async: false,
+				async: true,
 				data: JSON.stringify(data),
 				success: function(reponse){
 					onUserDataAcquired(JSON.stringify(reponse));

@@ -68,7 +68,7 @@ function (
 				contentType: 'application/json',
 				dataType: 'json',
 				processData: false,
-				async: false,
+				async: true,
 				data: JSON.stringify(data),
 				success: function(reponse){
 					// remove from the queue and keep publishing!

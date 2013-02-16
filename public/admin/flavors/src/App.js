@@ -16,7 +16,7 @@ function (
 		var 
 		self = this,
 		container,
-		host = "http://mixology.eu01.aws.af.cm/",
+		host = "http://127.0.0.1:8000/",
 		action = 'flavors'; 
 
 		var setup = function(){	
@@ -43,7 +43,7 @@ function (
 			addBtn.innerHTML = 'add';
 			formContainer.appendChild(addBtn);			
 			addBtn.addEventListener('click', function(){
-				add(name.value, color.value, groups.value);
+				add(name.value, color.value, groups.value.split(','));
 			});
 
 			container = document.createElement('div');
@@ -95,7 +95,7 @@ function (
 			var updateBtn = document.createElement('button');
 			updateBtn.innerHTML = 'update';
 			updateBtn.addEventListener('click', function(){
-				update(data._id, name.value, color.value, groups.value, created.value);
+				update(data._id, name.value, color.value, groups.value.split(','), created.value);
 			});
 			item.appendChild(updateBtn);
 

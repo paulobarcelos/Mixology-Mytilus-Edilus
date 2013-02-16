@@ -51,8 +51,6 @@ function (
 			var browserInfo = browser.getInfo();
 
 			var viewport = document.querySelector("meta[name=viewport]");
-			var scale = window.innerWidth / screen.width;
-			viewport.content= 'width=640, initial-scale='+scale+', minimum-scale='+scale+', maximum-scale='+scale;
 
 
 

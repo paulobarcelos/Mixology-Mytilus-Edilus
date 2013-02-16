@@ -3,7 +3,14 @@
 	<head>
 		<title>Mytilus Edilus</title>
 		<link rel="stylesheet" href="/station/src/style.css">
-		<meta name="viewport" content="width=640, user-scalable=no" />
+		<meta name="viewport" id="viewport" content="width=640" />
+		<script>
+			if (screen.width > 740) {
+				var mvp = document.getElementById('viewport');
+				var mvps = window.innerWidth / screen.width
+				mvp.setAttribute('content','width=640, initial-scale='+mvps+', maximum-scale='+mvps);
+			}
+		</script>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />		
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

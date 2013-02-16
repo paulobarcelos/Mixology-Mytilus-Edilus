@@ -44,13 +44,18 @@ function (
 		var setup = function(){	
 			self.setFPS(0);
 
-			document.addEventListener('touchmove', function(e) {
+			/*document.addEventListener('touchmove', function(e) {
 				e.preventDefault();
-			})
+			})*/
 
 			var browserInfo = browser.getInfo();
 			
 			setTimeout(function(){alert(screen.width + ', ' + window.innerWidth + ', '+ screen.width/window.innerWidth)}, 1000);
+
+			var viewport = document.querySelector("meta[name=viewport]");
+			var scale = window.innerWidth / screen.width;
+			viewport.content= 'width=640, initial-scale='+scale+', minimum-scale='+scale+', maximum-scale='+scale+', user-scalable=no';
+
 
 
 			var titleNode = document.createElement('h1');

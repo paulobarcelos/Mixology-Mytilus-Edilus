@@ -21,7 +21,11 @@ body{
 	overflow: hidden;
 	
 }
-* {
+h1,
+.combination-selector,
+.rating,
+.send
+{
    /* -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;*/

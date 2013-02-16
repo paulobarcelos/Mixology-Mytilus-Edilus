@@ -10,17 +10,14 @@
 			if (navigator.platform.indexOf("iPad") !== -1 || 
 				navigator.platform.indexOf("iPhone") !== -1 ||
 				navigator.platform.indexOf("iPod") !== -1) {
+				console.log('we')
 				meta.setAttribute('content', 'width=640, user-scalable=no');	
 			}
 			else{
 				var mvps = window.innerWidth / screen.width;
-				meta.setAttribute('content', 'width=640,  initial-scale=0.5, maximum-scale=0.5');
-				
-				console.log('width=640, initial-scale='+mvps+', maximum-scale='+mvps)
-				//mvp.setAttribute('content','width=640, initial-scale='+mvps+', maximum-scale='+mvps);
+				meta.setAttribute('content', 'width=640, initial-scale='+mvps+', maximum-scale='+mvps);
 			}
 			document.getElementsByTagName('head')[0].appendChild(meta);
-
 		
 		</script>
 		<meta name="apple-mobile-web-app-capable" content="yes" />

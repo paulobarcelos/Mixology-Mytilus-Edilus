@@ -44,9 +44,13 @@ function (
 		var setup = function(){	
 			self.setFPS(0);
 
+			document.addEventListener('touchmove', function(e) {
+				e.preventDefault();
+			})
+
 			var browserInfo = browser.getInfo();
 			
-			setTimeout(function(){alert(screen.width + ', ' + window.innerWidth + ', '+ screen.width/window.innerWidth}, 1000);
+			setTimeout(function(){alert(screen.width + ', ' + window.innerWidth + ', '+ screen.width/window.innerWidth)}, 1000);
 
 
 			var titleNode = document.createElement('h1');

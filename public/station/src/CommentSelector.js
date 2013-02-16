@@ -32,6 +32,10 @@ function (
 			valueNode = document.createElement('input');
 			valueNode.type = 'text';
 			valueNode.placeholder = 'This is...';
+			valueNode.autocomplete = "off";
+			valueNode.autocorrect = "off";
+			valueNode.autocapitalize = "off";
+			valueNode.spellcheck = "false";
 			dom.addClass(valueNode, 'value');
 			node.appendChild(valueNode);
 

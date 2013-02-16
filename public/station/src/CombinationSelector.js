@@ -38,6 +38,7 @@ function (
 		ready,
 		readySignal,
 		unreadySignal,
+		groupChangedSignal,
 		changedSignal;
 
 		var init = function(){
@@ -71,6 +72,7 @@ function (
 			selected = [];
 			readySignal = new Signal();
 			unreadySignal = new Signal();
+			groupChangedSignal = new Signal();
 			changedSignal = new Signal();
 
 			groupSelectors = {};
@@ -88,6 +90,10 @@ function (
 			}
 
 			reset();
+			for(id in groups){
+				groupSelectors[id].select();
+				break;
+			}
 		}
 		var onGroupSelected = function(group){
 			for(id in groups){
@@ -98,6 +104,8 @@ function (
 			flavorsNode.appendChild(namesNode);
 
 			selected = flavorGroups[group.id].selected;
+
+			groupChangedSignal.dispatch(self);
 			processChange();
 		}
 		var onFlavorGroupChanged = function (flavorGroup) {
@@ -143,16 +151,19 @@ function (
 			for(id in groups){
 				flavorGroups[id].reset();
 			}
-			for(id in groups){
+			/*for(id in groups){
 				groupSelectors[id].select();
 				break;
-			}
+			}*/
 		}
 		var getNode = function(){
 			return node;
 		}
 		var getReady = function(){
 			return ready;
+		}
+		var getGroupChangedSignal = function(){
+			return groupChangedSignal;
 		}
 		var getReadySignal = function(){
 			return readySignal;
@@ -183,6 +194,9 @@ function (
 		});
 		Object.defineProperty(self, 'unreadySignal', {
 			get: getUnreadySignal
+		});
+		Object.defineProperty(self, 'groupChangedSignal', {
+			get: getGroupChangedSignal
 		});
 		Object.defineProperty(self, 'selected', {
 			get: getSelected

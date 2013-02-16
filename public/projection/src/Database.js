@@ -22,9 +22,12 @@ function (
 			
 		}
 		var add = function(data){
-			data.forEach(combinations.add)
-
 			dimensions.rating.filterAll();
+			
+			combinations.add(data)
+
+			console.log('Size', combinations.size());
+			
 			dimensions.rating.filter([4,5]);
 			
 			console.log(dimensions.rating.top(5));

@@ -139,6 +139,7 @@ function (
 		
 		var init = function(){
 			combinationSelector = new CombinationSelector(flavors);
+			combinationSelector.groupChangedSignal.add(onFlavorGroupChanged);
 			self.container.appendChild(combinationSelector.node);
 
 			ratingSelector = new RatingSelector();
@@ -154,6 +155,12 @@ function (
 			combinationPublisher.start();
 		}
 
+		var onFlavorGroupChanged = function (combinationSelector) {
+			combinationSelector.reset();
+			ratingSelector.reset();
+			commentSelector.reset();
+		}
+
 		var onSend = function (commentSelector) {
 			var data = {
 				flavorIds: combinationSelector.selected,
@@ -162,7 +169,13 @@ function (
 				comment: commentSelector.value
 			}
 			if(data.flavorIds.length < 3){
-				alert("You need to selected the ingredients first!");
+				alert("You haven't to selected the ingredients.");
+			}
+			else if(!ratingSelector.value){
+				alert("Please rate your combination.");
+			}
+			if(!commentSelector.value){
+				alert("Please write your opinion.");
 			}
 			else onComplete(data);
 		}

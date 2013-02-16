@@ -87,11 +87,22 @@ function (
 			ready = false;
 		}
 		var processChange = function(){
-			if(selected.length == 2){
+			if(selected.length == 3){
+				var extra = selected.shift();
+				for (var i = flavorSelectors.length - 1; i >= 0; i--) {
+					if(flavorSelectors[i].flavor._id ==  extra._id){
+						flavorSelectors[i].deselect();
+						break;
+					}
+					//	flavorSelectors[i].active = false
+				}
+			} 
+			
+			/*if(selected.length == 2){
 				if(!ready){
 					for (var i = flavorSelectors.length - 1; i >= 0; i--) {
-						if(!flavorSelectors[i].selected)
-							flavorSelectors[i].active = false
+						//if(!flavorSelectors[i].selected)
+						//	flavorSelectors[i].active = false
 					};
 					ready = true;
 					readySignal.dispatch(self);
@@ -100,12 +111,12 @@ function (
 			else{
 				if(ready){
 					for (var i = flavorSelectors.length - 1; i >= 0; i--) {
-						flavorSelectors[i].active = true
+					//	flavorSelectors[i].active = true
 					};
 					ready = false;
 					unreadySignal.dispatch(self);
 				}
-			}
+			}*/
 			changedSignal.dispatch(self);
 		}
 		var getNode = function(){

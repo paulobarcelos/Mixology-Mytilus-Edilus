@@ -45,7 +45,7 @@ function (
 			self.setFPS(0);
 
 			var browserInfo = browser.getInfo();
-			alert(browserInfo.name + '_' + browserInfo.version + '_' + browserInfo.os);
+			alert(screen.width + ', ' + window.innerWidth + ', '+ screen.width/window.innerWidth);
 
 
 			var titleNode = document.createElement('h1');

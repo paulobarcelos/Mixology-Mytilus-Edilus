@@ -23,12 +23,17 @@ body{
 }
 h1,
 .combination-selector,
-.rating,
-.send
+.group-container,
+.group,
+.cluster,
+.flavor,
+.tabs,
+.tab,
+.rating
 {
-   /* -webkit-user-select: none;
+    -webkit-user-select: none;
     -moz-user-select: none;
-    user-select: none;*/
+    user-select: none;
 }
 h1{
 	width: 100%;

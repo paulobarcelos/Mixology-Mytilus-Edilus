@@ -3,9 +3,10 @@
 	<head>
 		<title>Mytilus Edilus</title>
 		<link rel="stylesheet" href="/station/src/style.css">
+		<meta name="viewport" id="view "content="width=640px, user-scalable=no" />
 		<script>
 		
-			var meta = document.createElement('meta');
+			var meta = document.getElementById('view');
 
 			if (navigator.platform.indexOf("iPad") !== -1 || 
 				navigator.platform.indexOf("iPhone") !== -1 ||
@@ -17,7 +18,6 @@
 				meta.setAttribute('content', 'width=640, initial-scale='+mvps+', maximum-scale='+mvps);
 			}
 			console.log(meta.content);
-			document.getElementsByTagName('head')[0].appendChild(meta);
 		
 		</script>
 		<meta name="apple-mobile-web-app-capable" content="yes" />

@@ -5,13 +5,11 @@
 		<link rel="stylesheet" href="/station/src/style.css">
 		<meta name="viewport" id="viewport" content="width=640, user-scalable=no" />
 		<script>
-		var is_uiwebview = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent);
 
-			if (!is_uiwebview && screen.width > 740) {
 				var mvp = document.getElementById('viewport');
 				var mvps = window.innerWidth / screen.width
 				mvp.setAttribute('content','width=640, initial-scale='+mvps+', maximum-scale='+mvps);
-			}
+		
 		</script>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />		

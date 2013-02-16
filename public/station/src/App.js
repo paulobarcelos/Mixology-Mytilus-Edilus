@@ -49,12 +49,10 @@ function (
 			})*/
 
 			var browserInfo = browser.getInfo();
-			
-			setTimeout(function(){alert(screen.width + ', ' + window.innerWidth + ', '+ screen.width/window.innerWidth)}, 1000);
 
 			var viewport = document.querySelector("meta[name=viewport]");
 			var scale = window.innerWidth / screen.width;
-			viewport.content= 'width=640, initial-scale='+scale+', minimum-scale='+scale+', maximum-scale='+scale+', user-scalable=no';
+			viewport.content= 'width=640, initial-scale='+scale+', minimum-scale='+scale+', maximum-scale='+scale;
 
 
 

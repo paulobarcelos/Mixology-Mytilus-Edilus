@@ -3,23 +3,7 @@
 	<head>
 		<title>Mytilus Edilus</title>
 		<link rel="stylesheet" href="/station/src/style.css">
-		<meta name="viewport" id="view "content="width=640px, user-scalable=no" />
-		<script>
-		
-			var meta = document.getElementById('view');
-
-			if (navigator.platform.indexOf("iPad") !== -1 || 
-				navigator.platform.indexOf("iPhone") !== -1 ||
-				navigator.platform.indexOf("iPod") !== -1) {
-				meta.setAttribute('content', 'user-scalable=no');	
-			}
-			else{
-				var mvps = window.innerWidth / screen.width;
-				meta.setAttribute('content', 'width=640, initial-scale='+mvps+', maximum-scale='+mvps);
-			}
-			console.log(meta.content);
-		
-		</script>
+		<meta name="viewport" content="width=640px, user-scalabe=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />		
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

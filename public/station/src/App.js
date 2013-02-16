@@ -174,7 +174,7 @@ function (
 			else if(!ratingSelector.value){
 				alert("Please rate your combination.");
 			}
-			if(!commentSelector.value){
+			else if(!commentSelector.value){
 				alert("Please write your opinion.");
 			}
 			else onComplete(data);

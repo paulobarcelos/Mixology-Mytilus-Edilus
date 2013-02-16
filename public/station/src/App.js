@@ -44,6 +44,9 @@ function (
 		var setup = function(){	
 			self.setFPS(0);
 
+			var browserInfo = browser.getInfo();
+			alert(browserInfo.name + '_' + browserInfo.version + '_' + browserInfo.os);
+
 
 			var titleNode = document.createElement('h1');
 			titleNode.innerHTML = "Mytilus Edulis";

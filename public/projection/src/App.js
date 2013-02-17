@@ -3,18 +3,21 @@ define(
 	'happy/app/BaseApp',
 
 	'DataLoader',
-	'Database'
+	'Database',
+	'TreeView'
 ],
 function (
 	BaseApp,
 
 	DataLoader,
-	Database
+	Database,
+	TreeView
 ){
 	var App = function(){
 		var 
 		self = this,
-		database;
+		database,
+		treeView;
 
 		var setup = function(){	
 			database = new Database();
@@ -25,15 +28,24 @@ function (
 				combinations: 'combinations'
 			})
 			dataLoader.combinationsUpdatedSignal.add(onCombinationsUpdated);
-			dataLoader.flavorsLoadedSignal.add(onFlavorsLoaded);			
+			dataLoader.flavorsLoadedSignal.add(onFlavorsLoaded);	
+
+			treeView = new TreeView();
+			treeView.inited = false;		
 		}
 
 		var onFlavorsLoaded = function(loader){
 			database.flavors = loader.flavors;
+			treeView.flavorsById = database.flavorsById;
 		}
 
 		var onCombinationsUpdated = function(loader){
 			database.add(loader.latestCombinations)
+			if(!treeView.inited){
+				treeView.inited = true;
+				treeView.render(database.tree)
+				self.container.appendChild(treeView.node)
+			}
 		}
 
 		var update = function(dt){

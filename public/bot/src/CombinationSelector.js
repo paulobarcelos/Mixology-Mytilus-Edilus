@@ -3,7 +3,6 @@ define(
 	'happy/utils/dom',
 
 	'happy/_libs/mout/array/forEach',
-	'happy/_libs/mout/array/unique',
 	'happy/_libs/signals',
 
 	'GroupSelector',
@@ -13,7 +12,6 @@ function (
 	dom,
 
 	forEach,
-	unique,
 	Signal,
 
 	GroupSelector,
@@ -33,7 +31,6 @@ function (
 
 		mainFlavor,
 		groups,
-		groupsIds,
 		groupSelectors,
 		flavorGroups,
 
@@ -49,7 +46,7 @@ function (
 			dom.addClass(node, 'combination-selector');
 
 			mainFlavor = flavors.shift();
-			parseFlavors(flavors);
+			groups = parseFlavors(flavors);
 
 			groupSelectorsNode = document.createElement('div');
 			dom.addClass(groupSelectorsNode, 'tabs');
@@ -80,7 +77,7 @@ function (
 
 			groupSelectors = {};
 			flavorGroups = {};
-			groupsIds.forEach( function (id){
+			for(id in groups){
 				flavorGroups[id] = new FlavorGroup(groups[id]);
 				flavorGroups[id].changedSignal.add(onFlavorGroupChanged);
 				
@@ -90,7 +87,7 @@ function (
 
 				groupSelectorsNode.appendChild(groupSelectors[id].node);
 
-			});
+			}
 
 			reset();
 			for(id in groups){
@@ -139,20 +136,15 @@ function (
 			changedSignal.dispatch(self);
 		}
 		var parseFlavors = function(flavors){
-			groups = {};
-			groupsIds = []
-
+			var groups = {};
 			for (var i = 0; i < flavors.length; i++) {
 				var flavor = flavors[i];
 				for (var j = 0; j < flavor.groups.length; j++) {
 					var group = flavor.groups[j];
 					if(!groups[group]) groups[group] = [];
 					groups[group].push(flavor);
-					groupsIds.push(group);
 				}
 			};
-			groupsIds = unique(groupsIds);
-			groupsIds.reverse();
 			return groups;
 		}
 		var reset = function () {

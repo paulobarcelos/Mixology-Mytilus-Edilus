@@ -40,6 +40,13 @@ function (
 				add(browserField.value);
 			});
 
+			var deleteAllBtn = document.createElement('button');
+			deleteAllBtn.innerHTML = 'DELETE ALL';
+			formContainer.appendChild(deleteAllBtn);			
+			deleteAllBtn.addEventListener('click', function(){
+				if(confirm("Do you really wanna delete?"))	removeAll();
+			});
+
 			container = document.createElement('div');
 			self.container.appendChild(container);
 
@@ -121,6 +128,14 @@ function (
 		var remove = function(id){
 			ajax({
 				url: host + 'api/' + action + '/' + id,
+				method: 'DELETE',
+				onSuccess: refresh
+			})
+		}
+
+		var removeAll = function(){
+			ajax({
+				url: host + 'api/' + action + '/',
 				method: 'DELETE',
 				onSuccess: refresh
 			})

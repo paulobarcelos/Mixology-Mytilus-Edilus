@@ -94,7 +94,7 @@ function (
 
 			reset();
 
-			groupSelectors[groupsIds[0]].select();
+			groupSelectors[groupsIds[groupsIds.length-1]].select();
 		
 		}
 		var onGroupSelected = function(group){

@@ -51,12 +51,16 @@ function (
 		var growBranch = function(parent, combination, flavors){
 			parent.branches = parent.branches || {};
 			parent.combinations = parent.combinations || [];
+			if(typeof parent.branchCount == "undefined") parent.branchCount = 0;
 			
 			parent.combinations.push(combination);
 			var flavor = flavors.shift();
 
 			if(flavor){
-				if(!parent.branches[flavor._id]) parent.branches[flavor._id] = {}
+				if(!parent.branches[flavor._id]) {
+					parent.branches[flavor._id] = {};
+					parent.branchCount ++;
+				}
 				growBranch(parent.branches[flavor._id], combination, flavors);
 			}	
 		}

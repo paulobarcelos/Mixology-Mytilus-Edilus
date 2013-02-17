@@ -1,4 +1,52 @@
-@import url(http://fonts.googleapis.com/css?family=Arbutus+Slab);
+/*@import url(http://fonts.googleapis.com/css?family=Arbutus+Slab);
 @import url(http://fonts.googleapis.com/css?family=Karla:700);
-@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400);
+@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400);*/
 
+body{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #000;
+}
+.hub{
+	position: absolute;
+	top:0;
+	left: 0;
+	width: 100%;
+	height: 0;
+}
+#root > .connector,
+#root > .ball,
+#root > .link > .hub > .connector{
+	display: none;
+}
+.connector{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 10px;
+	width: 1px;
+	margin-top: -5px;
+	background-color: #fff;
+}
+.ball{
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100px;
+	width: 100px;
+	margin-top: -50px;
+	margin-left: -50px;
+	border-radius: 50px;
+
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	border: solid 5px #fff;
+		
+}

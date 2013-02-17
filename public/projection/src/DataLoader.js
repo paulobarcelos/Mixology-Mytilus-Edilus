@@ -35,8 +35,13 @@ function (
 			combinations = [];;
 			flavorsLoadedSignal = new Signal();
 			combinationsUpdatedSignal = new Signal();
+		}
 
-			loadFlavorsData();
+		var load = function(){
+
+			var flavorsData = localStorage.getItem('flavors'); 
+			if(flavorsData) onFlavorsDataAcquired.apply(self, [flavorsData]);
+			else loadFlavorsData();
 		}
 		var loadFlavorsData = function(){
 			ajax({
@@ -52,6 +57,7 @@ function (
 			});
 		}
 		var onFlavorsDataAcquired = function(data){
+			localStorage.setItem('flavors', data); 
 			flavors = JSON.parse(data);
 			flavorsLoadedSignal.dispatch(self);
 			fetchCombinations();
@@ -116,6 +122,9 @@ function (
 
 		Object.defineProperty(self, 'init', {
 			value: init
+		});
+		Object.defineProperty(self, 'load', {
+			value: load
 		});
 		Object.defineProperty(self, 'flavors', {
 			get: getFlavors

@@ -2,13 +2,13 @@ define(
 [
 	'happy/app/BaseApp',
 
-	'CombinationsManager',
+	'DataLoader',
 	'Database'
 ],
 function (
 	BaseApp,
 
-	CombinationsManager,
+	DataLoader,
 	Database
 ){
 	var App = function(){
@@ -17,18 +17,23 @@ function (
 		database;
 
 		var setup = function(){	
-			var combinationsManager = new CombinationsManager({
+			database = new Database();
+
+			var dataLoader = new DataLoader({
 				api: "http://mixology.eu01.aws.af.cm/api/",
 				flavors: 'flavors',
 				combinations: 'combinations'
 			})
-			combinationsManager.updatedSignal.add(onCombinationsUpdated);
-
-			database = new Database();
+			dataLoader.combinationsUpdatedSignal.add(onCombinationsUpdated);
+			dataLoader.flavorsLoadedSignal.add(onFlavorsLoaded);			
 		}
 
-		var onCombinationsUpdated = function(manager, data){
-			database.add(data)
+		var onFlavorsLoaded = function(loader){
+			database.flavors = loader.flavors;
+		}
+
+		var onCombinationsUpdated = function(loader){
+			database.add(loader.latestCombinations)
 		}
 
 		var update = function(dt){

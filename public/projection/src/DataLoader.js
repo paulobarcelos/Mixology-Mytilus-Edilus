@@ -14,7 +14,7 @@ function (
 
 	Signal
 ){
-	var CombinationsManager = function(options){
+	var DataLoader = function(options){
 		var 
 		self = this,
 		defaults = {
@@ -24,16 +24,17 @@ function (
 		},
 		settings,
 		flavors,
-		flavorsById,
 		combinations,
-		updatedSignal;
+		latestCombinations,
+		flavorsLoadedSignal,
+		combinationsUpdatedSignal;
 
 		var init = function(){
 			settings = mixIn({}, defaults, options);
 			flavors = [];
-			flavorsById = {};
 			combinations = [];;
-			updatedSignal = new Signal();
+			flavorsLoadedSignal = new Signal();
+			combinationsUpdatedSignal = new Signal();
 
 			loadFlavorsData();
 		}
@@ -52,10 +53,7 @@ function (
 		}
 		var onFlavorsDataAcquired = function(data){
 			flavors = JSON.parse(data);
-			flavorsById = {};
-			forEach(flavors, function(flavor){
-				flavorsById[flavor._id] = flavor;
-			});
+			flavorsLoadedSignal.dispatch(self);
 			fetchCombinations();
 		}
 		var fetchCombinations = function(){
@@ -94,32 +92,26 @@ function (
 			var newCombinations = JSON.parse(json);
 			if(!newCombinations.length) return
 
-			var parsedNewCombinations = [];
-			forEach(newCombinations, function(combination){
-				combination.flavors = [];
-				for (var i = combination.flavorIds.length - 1; i >= 0; i--) {
-					var id = combination.flavorIds[i];
-					var flavor = flavorsById[id];
-					combination.flavors.push(flavor);
-				};
-				combinations.push(combination);
-				parsedNewCombinations.push(combination)
-			});
+			latestCombinations = newCombinations;
+			combinations = combinations.concat(latestCombinations)
 
-			updatedSignal.dispatch(self, parsedNewCombinations);
+			combinationsUpdatedSignal.dispatch(self);
 		}
 
 		var getFlavors = function(){
 			return flavors;
 		}
-		var getFlavorsById = function(){
-			return flavorIds;
-		}
 		var getCombinations = function(){
 			return combinations;
 		}
-		var getUpdatedSignal = function(){
-			return updatedSignal;
+		var getLatestCombinations = function(){
+			return latestCombinations;
+		}
+		var getFlavorsLoadedSignal = function(){
+			return flavorsLoadedSignal;
+		}
+		var getCombinationsUpdatedSignal = function(){
+			return combinationsUpdatedSignal;
 		}
 
 		Object.defineProperty(self, 'init', {
@@ -128,17 +120,20 @@ function (
 		Object.defineProperty(self, 'flavors', {
 			get: getFlavors
 		});
-		Object.defineProperty(self, 'flavorsById', {
-			get: getFlavorsById
-		});
 		Object.defineProperty(self, 'combinations', {
 			get: getCombinations
 		});
-		Object.defineProperty(self, 'updatedSignal', {
-			get: getUpdatedSignal
+		Object.defineProperty(self, 'latestCombinations', {
+			get: getLatestCombinations
+		});
+		Object.defineProperty(self, 'flavorsLoadedSignal', {
+			get: getFlavorsLoadedSignal
+		});
+		Object.defineProperty(self, 'combinationsUpdatedSignal', {
+			get: getCombinationsUpdatedSignal
 		});
 
 		init();
 	}
-	return CombinationsManager;
+	return DataLoader;
 });

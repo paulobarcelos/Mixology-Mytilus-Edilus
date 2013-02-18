@@ -42,33 +42,42 @@ function (
 			gui = new Gui();
 			guiData = {};
 
+			var root = gui.addFolder('Root');
+
 			guiData.offsetX = -100;
-			gui.add(guiData, 'offsetX', -1000,0);
+			root.add(guiData, 'offsetX', -1000,0);
 
-			guiData.primaryDistance = 600;
-			gui.add(guiData, 'primaryDistance', 0,1000);
+			var primary = gui.addFolder('Primary');
 
-			guiData.secondaryDistance = 200;
-			gui.add(guiData, 'secondaryDistance', 0,1000);
+			guiData.primaryDistancePower = 0.555555;
+			primary.add(guiData, 'primaryDistancePower', 0,1);
+
+			guiData.primaryDistance = 350;
+			primary.add(guiData, 'primaryDistance', 0,1000);
 
 			guiData.primaryOpenAngle = 170;
-			gui.add(guiData, 'primaryOpenAngle', 0,360);
+			primary.add(guiData, 'primaryOpenAngle', 0,360);
 
 			guiData.primaryStartAngle = 270;
-			gui.add(guiData, 'primaryStartAngle', 0,360);
+			primary.add(guiData, 'primaryStartAngle', 0,360);
+
+			var secondary = gui.addFolder('Secondary');
+
+			guiData.secondaryDistance = 100;
+			secondary.add(guiData, 'secondaryDistance', 0,1000);			
 
 			guiData.secondaryOpenAngle = 270;
-			gui.add(guiData, 'secondaryOpenAngle', 0,360);
+			secondary.add(guiData, 'secondaryOpenAngle', 0,360);
 
 			guiData.secondaryStartAngle = 0;
-			gui.add(guiData, 'secondaryStartAngle', 0,360);
+			secondary.add(guiData, 'secondaryStartAngle', 0,360);
 
 			guiData.combinationCountScale = 2.2222;
 			gui.add(guiData, 'combinationCountScale', 0,20);
 
 			gui.add(self, 'render');
 
-			gui.remember(guiData);
+			//gui.remember(guiData);
 
 		}
 		var setData = function(value){
@@ -100,14 +109,15 @@ function (
 			dom.addClass(containerNode, 'hub');
 			parent.linkNode.appendChild(containerNode);
 
-			var connectorNode = document.createElement('div');
-			dom.addClass(connectorNode, 'connector');
-			containerNode.appendChild(connectorNode);
-
 			var ballNode = document.createElement('div');
 			ballNode.style.backgroundColor = flavor.color;
 			dom.addClass(ballNode, 'ball');
 			containerNode.appendChild(ballNode);
+
+			var connectorNode = document.createElement('div');
+			dom.addClass(connectorNode, 'connector');
+			containerNode.appendChild(connectorNode);
+
 
 			var linkNode = document.createElement('div');
 			dom.addClass(linkNode, 'link');
@@ -150,9 +160,13 @@ function (
 		var applyTransformsSingle = function(hub){
 			if(hub.flavor._id != 'root' && hub.parent.flavor._id != 'root'){
 				if(hub.parent.parent.flavor._id == 'root'){
-					hub.ballTransformer.translate(guiData.primaryDistance, 0, 0);
-					hub.linkTransformer.translate(guiData.primaryDistance, 0, 0);
-					hub.connectorTransformer.scale(guiData.primaryDistance, 1, 1);
+					var distance = guiData.primaryDistance * Math.pow(hub.data.branchCount, guiData.primaryDistancePower);
+
+
+					hub.ballTransformer.translate(distance, 0, 0);
+					hub.linkTransformer.translate(distance, 0, 0);				
+					hub.connectorTransformer.scale(distance, 1, 1);
+
 					var angleTotal = guiData.primaryOpenAngle;
 					var angleUnit = guiData.primaryOpenAngle / (hub.parent.data.branchCount -1);	
 					var angleIndex = angleUnit * hub.index;		
@@ -170,9 +184,9 @@ function (
 					hub.containerTransformer.rotate(0,0,1,angle);
 				}
 
-				var scale = (hub.data.combinations.length / hub.parent.data.combinations.length) * guiData.combinationCountScale;
-				scale = map(scale, 0, 1, 0, 0.8);
-				hub.containerTransformer.scale(scale,scale,1);	
+				//var scale = (hub.data.combinations.length / hub.parent.data.combinations.length) * guiData.combinationCountScale;
+				//scale = map(scale, 0, 1, 0, 0.8);
+				hub.containerTransformer.scale(0.9,0.9,1);	
 			}
 		}	
 		var destroy = function(){
@@ -194,7 +208,11 @@ function (
 
 		var setSize = function (value){
 			size = value;
-			if(rootHub)rootHub.containerTransformer.translate(size.x/2, size.y + guiData.offsetX, 0);
+			if(rootHub){
+				var scale = size.y / 1500;
+				rootHub.containerTransformer.translate(size.x/2, size.y + guiData.offsetX * scale, 0);				
+				rootHub.containerTransformer.scale(scale,scale,scale);
+			}
 	
 		}
 		var getSize = function (){

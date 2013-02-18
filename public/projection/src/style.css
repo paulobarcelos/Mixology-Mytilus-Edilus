@@ -11,6 +11,7 @@ body{
 	margin: 0;
 	padding: 0;
 	background-color: #000;
+	overflow: hidden;
 }
 .hub{
 	position: absolute;
@@ -18,6 +19,9 @@ body{
 	left: 0;
 	width: 100%;
 	height: 0;
+}
+.link{
+	position: absolute;
 }
 #root > .connector,
 #root > .ball,
@@ -28,13 +32,13 @@ body{
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 10px;
+	height: 6px;
 	width: 1px;
-	margin-top: -5px;
-	background-color: #fff;
+	margin-top: -3px;
+	background-color: #222;
 }
 .ball{
-	z-index: 1;
+	//z-index: 1;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -47,6 +51,24 @@ body{
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
-	border: solid 5px #fff;
+	//border: solid 5px #ccc;
 		
+}
+/* primary */
+#root > .link > .hub > .link > .hub > .ball{
+	
+}
+#root > .link > .hub > .link > .hub > .connector{
+}
+/* secondary */
+#root > .link > .hub > .link > .hub > .link > .hub > .ball{
+	height: 50px;
+	width: 50px;
+	margin-top: -25px;
+	margin-left: -25px;
+	border-radius: 25px;
+	//border: solid 2px #ccc;
+}
+#root > .link > .hub > .link > .hub > .link > .hub > .connector{
+
 }

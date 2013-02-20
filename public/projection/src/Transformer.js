@@ -62,6 +62,9 @@ function (
 			transformation.originZ = z + sufix;
 			applyTransformation();
 		}
+		var opacity = function(alpha){
+			node.style.opacity = alpha;
+		}
 		var applyTransformation = function(){
 			node.style.WebkitTransform  = ''
 				+ 'translate3d(' + transformation.translationX + ',' + transformation.translationY + ',' + transformation.translationZ + ') '
@@ -71,6 +74,10 @@ function (
 			node.style.WebkitTransformOriginX =  transformation.originX;
 			node.style.WebkitTransformOriginY =  transformation.originY;
 			node.style.WebkitTransformOriginZ =  transformation.originZ;
+		}
+
+		var getTransformation = function(){
+			return transformation;
 		}
 
 		Object.defineProperty(self, 'translate', {
@@ -84,6 +91,12 @@ function (
 		});
 		Object.defineProperty(self, 'origin', {
 			value: origin
+		});
+		Object.defineProperty(self, 'opacity', {
+			value: opacity
+		});
+		Object.defineProperty(self, 'transformation', {
+			get: getTransformation
 		});
 		
 		init();

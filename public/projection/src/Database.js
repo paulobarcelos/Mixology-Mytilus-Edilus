@@ -26,13 +26,23 @@ function (
 		var add = function(data){
 			combinations = combinations.concat(data)
 
-			data.forEach(function (combination) {
+			tree = {};
+			combinationsByUid = {};
+			combinationsByRating = {};
+			flavors.forEach(function(flavor, index){
+				flavorsById[flavor._id].combinations = [];
+			});
+			combinations.forEach(function (combination) {
+				combination.flavors = [];			
+			});
+
+			combinations.forEach(function (combination) {
 				combination.flavorIds.forEach(function (id){
 					flavorsById[id].combinations.push(combination);
 					if(!combination.flavors) combination.flavors = [];
 					combination.flavors.push(flavorsById[id]);
 				});
-				combination.flavors.sort(sortByIndex);
+				
 				var uid = generateCombinationUID(combination);
 				combination.uid = uid
 				if(!combinationsByUid[uid]) combinationsByUid[uid] = [];
@@ -46,10 +56,13 @@ function (
 			combinations.forEach(function(combination){
 				combination.flavors.sort(sortByCombinationCount);
 				growBranch(tree, combination, combination.flavors.slice(0));
+				//tree.flavorIdsByCreationDate.sort(sortByFlavorCreationDate);
 			});
 		}
 		var growBranch = function(parent, combination, flavors){
-			parent.branches = parent.branches || {};
+			parent.branchesByFlavorId = parent.branchesByFlavorId || {};
+			parent.branchesSortedByBranchCount = parent.branchesSortedByBranchCount || [];
+			parent.flavorIdsSortedByCreationDate = parent.flavorIdsSortedByCreationDate || [];
 			parent.combinations = parent.combinations || [];
 			if(typeof parent.branchCount == "undefined") parent.branchCount = 0;
 			
@@ -57,12 +70,16 @@ function (
 			var flavor = flavors.shift();
 
 			if(flavor){
-				if(!parent.branches[flavor._id]) {
-					parent.branches[flavor._id] = {};
+				if(!parent.branchesByFlavorId[flavor._id]) {
+					parent.branchesByFlavorId[flavor._id] = {};
+					parent.flavorIdsSortedByCreationDate.push(flavor._id);
+					parent.branchesSortedByBranchCount.push(parent.branchesByFlavorId[flavor._id]);
 					parent.branchCount ++;
 				}
-				growBranch(parent.branches[flavor._id], combination, flavors);
-			}	
+				growBranch(parent.branchesByFlavorId[flavor._id], combination, flavors);
+				parent.branchesByFlavorId[flavor._id].flavorIdsSortedByCreationDate.sort(sortByFlavorCreationDate);
+				parent.branchesByFlavorId[flavor._id].branchesSortedByBranchCount.sort(sortByBranchCount);
+			}
 		}
 		var setFlavors = function (value) {
 			flavors = value;
@@ -97,14 +114,21 @@ function (
 			return a.index - b.index;
 		}
 		var sortByUIDCombinationCount = function(a,b){
-			return combinationsByUid[b].length; - combinationsByUid[a].length
+			return combinationsByUid[b].length; - combinationsByUid[a].length;
+		}
+		var sortByBranchCount = function(a,b){
+			return b.branchCount - a.branchCount;
 		}
 		var generateCombinationUID = function(combination){
+			combination.flavors.sort(sortByIndex);
 			var uid = '';
 			combination.flavors.forEach(function(flavor){
 				uid += flavor._id;
 			});
 			return uid;
+		}
+		var sortByFlavorCreationDate = function(a,b){
+			return (new Date(flavorsById[b].created)).getTime() - (new Date(flavorsById[a].created)).getTime();
 		}
 
 		Object.defineProperty(self, 'add', {

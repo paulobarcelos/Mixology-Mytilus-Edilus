@@ -22,7 +22,7 @@ function (
 		treeView;
 
 		var setup = function(){	
-			self.setFPS(0);
+			//self.setFPS(0);
 
 			database = new Database();
 
@@ -50,7 +50,6 @@ function (
 		var onCombinationsUpdated = function(loader){
 			database.add(loader.latestCombinations);
 			treeView.data = database.tree;
-			treeView.render();
 		}
 
 		var onResize = function(size){
@@ -62,11 +61,15 @@ function (
 				case 'SPACEBAR':
 					self.toggleFullscreen();					
 					break;
+				case 'A':
+					console.log('aa')
+					treeView.startAnimation(0,60*5, function(){console.log('end!')});					
+					break;
 			}
 		}
 
 		var update = function(dt){
-		
+			treeView.update(dt);
 		}
 		var draw = function(dt){
 			

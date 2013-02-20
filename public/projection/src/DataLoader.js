@@ -72,8 +72,9 @@ function (
 					created: {
 						$gt: combinations[combinations.length-1].created
 					}
-				} 
+				}
 			}
+			query.sort = { created: 1};
 			var queryString = '?';
 			for(key in query){
 				queryString +=  key + '=' + encodeURIComponent(JSON.stringify(query[key])) + '&';

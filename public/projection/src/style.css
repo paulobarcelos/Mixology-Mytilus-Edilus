@@ -13,6 +13,13 @@ body{
 	background-color: #000;
 	overflow: hidden;
 }
+.hub,
+.link,
+.ball,
+.connector {
+	-webkit-backface-visibility: hidden;
+	-webkit-perspective: 1000;
+}
 .hub{
 	position: absolute;
 	top:0;
@@ -28,46 +35,72 @@ body{
 #root > .link > .hub > .connector{
 	display: none;
 }
+#root > .link > .hub > .ball{
+	border: solid 4px #000;
+	/*height: 40px;
+	width: 40px;
+	margin-top: -20px;
+	margin-left: -20px;
+	border-radius: 20px;*/
+
+	/*background-image: url(../data/flavors/0.png); 
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;*/
+	height: 300px;
+	width: 300px;
+	margin-top: -150px;
+	margin-left: -150px;
+	border-radius: 150px;
+}
 .connector{
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 6px;
+	height: 2px;
 	width: 1px;
-	margin-top: -3px;
-	background-color: #222;
+	margin-top: -1px;
+	background-color: rgba(255,255,255,0.09);
 }
 .ball{
-	//z-index: 1;
+	z-index: 1;
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 100px;
+	/*height: 100px;
 	width: 100px;
 	margin-top: -50px;
 	margin-left: -50px;
-	border-radius: 50px;
+	border-radius: 50px;*/
+	height: 200px;
+	width: 200px;
+	margin-top: -100px;
+	margin-left: -100px;
+	border-radius: 100px;
 
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
-	//border: solid 5px #ccc;
+	border: solid 3px #000;
+
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
 		
 }
 /* primary */
 #root > .link > .hub > .link > .hub > .ball{
-	
+
 }
 #root > .link > .hub > .link > .hub > .connector{
 }
 /* secondary */
 #root > .link > .hub > .link > .hub > .link > .hub > .ball{
-	height: 50px;
-	width: 50px;
-	margin-top: -25px;
-	margin-left: -25px;
-	border-radius: 25px;
-	//border: solid 2px #ccc;
+	height: 120px;
+	width: 120px;
+	margin-top: -60px;
+	margin-left: -60px;
+	border-radius: 60px;
 }
 #root > .link > .hub > .link > .hub > .link > .hub > .connector{
 

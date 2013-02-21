@@ -6,6 +6,7 @@ define(
 	'happy/_libs/dat.gui',
 	'happy/_libs/mout/math/clamp',
 	'happy/_libs/mout/math/map',
+	'happy/_libs/signals',
 
 	'Transformer'
 ],
@@ -16,338 +17,173 @@ function (
 	Gui,
 	clamp,
 	map,
+	Signal,
 
 	Transformer
 ){
-	var TreeView = function(){
+	var FeaturedFlavors = function(container){
 		var 
 		self = this,
-		flavorsById,
-		data,
+		
+		stopSignal,
 		node,
-		rootHub,
+		nodeTransformer,
+		
+		commentNode,
+		commentTransformer,
+
+		imagesNode,
+		imagesTransformer,
+
+
+		namesNode,
+		flavorsById,
+		combinations,
+
+		animationShowTimer,
+		animationHideTimer,
+		animationTimer,
+
+		usedIds,
 		size,
-		zoom,
-		hubs;
 
-		var 
-		gui,
-		guiData;
+		isActive,
+		maxCount,
+		count;
 
-
-		var GuiData = function(){
-			this.rootZeroScaleBalance = 2.1;
-			this.rootBranchCountScalePower = 0.45;
-			this.zoom = 1.0;
-			
-			this.offsetX = 0;
-			this.primaryDistance = 463;
-			this.primaryOpenAngle = 360;
-			this.primaryStartAngle = 360;
-			this.primaryRatingAveragePower = 3;
-			
-			this.secondaryDistance = 22;
-			this.secondaryOpenAngle = 270;
-			this.secondaryStartAngle = 135;
-			this.secondaryRatingAveragePower = 3;
-
-
-			this.render = function(){
-				render();
-			}
-		}
 
 		var init = function(){
+			isActive = false;
 			node = document.createElement('div');
-			dom.addClass(node, 'tree');
+			dom.addClass(node, 'featured-flavors');
+			nodeTransformer = new Transformer(node);
+			nodeTransformer.origin(0,0);
+
+			commentNode = document.createElement('div');
+			dom.addClass(commentNode, 'comment');
+			node.appendChild(commentNode);
+			commentTransformer = new Transformer(commentNode);
+
+			imagesNode = document.createElement('div');
+			dom.addClass(imagesNode, 'images');
+			node.appendChild(imagesNode);
 			
-			destroy();
 
-			gui = new Gui();
-			
-			guiData = new GuiData();
+			namesNode = document.createElement('div');
+			dom.addClass(namesNode, 'names');
+			node.appendChild(namesNode);
 
-			var root = gui.addFolder('Root');
+			usedIds = {};
 
-			root.add(guiData, 'zoom', 0,10);
-			root.add(guiData, 'rootZeroScaleBalance', 0,3);
-			//root.add(guiData, 'rootBranchCountScalePower', 0, 0.51);
-			root.add(guiData, 'offsetX', -300,300);
-			
-			var primary = gui.addFolder('Primary');
+			stopSignal = new Signal();
 
-			primary.add(guiData, 'primaryDistance', 0,1000);
-			//primary.add(guiData, 'primaryDistancePower', 0, 2.9999999);			
-			//primary.add(guiData, 'primaryOpenAngle', 0,360);
-			//primary.add(guiData, 'primaryStartAngle', 0,360);
-			primary.add(guiData, 'primaryRatingAveragePower', 0,3); 
-			//primary.add(guiData, 'primaryCombinationCountWeightPower', 0,3.999999);
-
-			
-			var secondary = gui.addFolder('Secondary');
-
-
-			secondary.add(guiData, 'secondaryDistance', 0,35);
-			//secondary.add(guiData, 'secondaryDistanceAlternate', 0,35);
-			//secondary.add(guiData, 'secondaryDistancePower', 0, 0.555);	
-			//secondary.add(guiData, 'secondaryOpenAngle', 0,360);
-			//secondary.add(guiData, 'secondaryStartAngle', 0,360);
-			secondary.add(guiData, 'secondaryRatingAveragePower', 0,1.5); 
-			
-			//secondary.add(guiData, 'secondaryCombinationCountWeightPower', 0,3.999999);
-
-			gui.add(guiData, 'render');
-
-			//gui.remember(guiData);
-
-			zoom = 1;
-
-		}
-		var setData = function(value){
-			data = value;
-			console.log(data)
-			if(isAnimating) render();
-		}
-		var render = function(){
-			destroy();
-			var zeroHub = {
-				linkNode: node
-			}
-			rootHub = createHub('NULL', data, zeroHub, 0);
-			
-		}
-
-		var createHub = function(flavorId, data, parent, index){
-			var flavor;
-			if(flavorsById[flavorId]){
-				flavor = flavorsById[flavorId];
-			}
-			else {
-				flavor = {
-					_id: 'root',
-					color: 'rgba(0,0,0,0)'
-				}
-			}
-			
-			var containerNode = document.createElement('div');
-			containerNode.id = flavor._id;
-			dom.addClass(containerNode, 'hub');
-			parent.linkNode.appendChild(containerNode);
-
-			var ballNode = document.createElement('div');
-			ballNode.style.backgroundColor = flavor.color;
-		//	ballNode.style.backgroundImage = 'url(/projection/data/flavors_cropped/'+flavor.index+'.png)';
-			dom.addClass(ballNode, 'ball');
-			containerNode.appendChild(ballNode);
-
-			var connectorNode = document.createElement('div');
-			dom.addClass(connectorNode, 'connector');
-			containerNode.appendChild(connectorNode);
-
-
-			var linkNode = document.createElement('div');
-			dom.addClass(linkNode, 'link');
-			containerNode.appendChild(linkNode);
-			
-			var hub = {
-				flavor: flavor,
-				containerNode: containerNode,
-				containerTransformer: new Transformer(containerNode),
-				ballNode: ballNode,				
-				ballTransformer: new Transformer(ballNode),
-				connectorNode: connectorNode,				
-				connectorTransformer: new Transformer(connectorNode),
-				linkNode: linkNode,				
-				linkTransformer: new Transformer(linkNode),
-				data: data,
-				parent: parent,
-				index: index
-			}
-
-			hub.containerTransformer.origin(0, 50);
-			hub.connectorTransformer.origin(0, 50);
-
-			applyTransformsSingle(hub);
-			
-			hubs.push(hub);
-
-			data.flavorIdsSortedByCreationDate.forEach(function(flavorId, childIndex){
-				createHub(flavorId, data.branchesByFlavorId[flavorId], hub, childIndex);
-			});
-
-			return hub;
-		}
-
-		var applyTransformsBulk = function(){
-			hubs.forEach(applyTransformsSingle);
-		}
-		var applyTransformsSingle = function(hub){
-			if(hub.parent && hub.parent.flavor && hub.parent.flavor._id == 'root'){
-				hub.ballTransformer.scale(0.1,0.1,0.1);
-			}
-			if(hub.flavor._id != 'root' && hub.parent.flavor._id != 'root'){
-				if(hub.parent.parent.flavor._id == 'root'){
-
-					var ratingAverage = 0;
-					hub.data.combinations.forEach(function(combination){
-						ratingAverage += combination.rating; 
-					});
-					ratingAverage /= hub.data.combinations.length;
-					//ratingAverage = Math.round(ratingAverage);
-					ratingAverage /= 5;
-
-					hub.data.ratingAverage = ratingAverage;
-					
-					var scale = Math.pow(ratingAverage, guiData.primaryRatingAveragePower);
-					var scale = clamp(scale, 0.3, 1);
-
-					var ballScale = scale * 0.1;
-					hub.ballTransformer.scale(ballScale,ballScale,ballScale);
-					
-					//var branchCountWeight = hub.data.branchCount / hub.parent.data.branchesSortedByBranchCount[0].branchCount;
-					//var branchCountMultiplier = hub.parent.data.branchCount /  Math.pow(hub.parent.data.branchCount , guiData.primaryDistancePower);
-					var distance = guiData.primaryDistance;//Math.pow(guiData.primaryDistance, guiData.primaryDistancePower);
-					var ratingAverageInverse = clamp(1-ratingAverage, 0.1, 1);
-					distance *= ratingAverageInverse;
-
-					hub.ballTransformer.translate(distance, 0, 0);
-					hub.linkTransformer.translate(distance, 0, 0);				
-					hub.connectorTransformer.scale(distance, 0.3, 1);
-
-					var angleTotal = guiData.primaryOpenAngle;
-					var angleUnit = guiData.primaryOpenAngle / (hub.parent.data.branchCount);	
-					var angleIndex = angleUnit * (hub.index );		
-					var angle = guiData.primaryStartAngle - angleTotal / 2 + angleIndex;
-					hub.containerTransformer.rotate(0,0,1,angle);
-
-					//var maxCombinationCount = 0;
-					//hub.parent.data.branchesSortedByBranchCount.forEach(function(data){
-					//	maxCombinationCount = Math.max(maxCombinationCount, data.combinations.length);
-					//});
-
-					
-					//hub.ballTransformer.opacity(ratingAverage);
-					//hub.connectorTransformer.opacity(ratingAverage);
-					
-
-
-					//var combinationCountWeight = clamp(hub.data.combinations.length / maxCombinationCount, 0, maxCombinationCount);
-					//combinationCountWeight = Math.pow(combinationCountWeight, guiData.primaryCombinationCountWeightPower);
-					//hub.containerTransformer.opacity(Math.pow(combinationCountWeight, guiData.secondaryCombinationCountWeightPower));
-					//hub.ballTransformer.scale(combinationCountWeight * ratingAverage,combinationCountWeight * ratingAverage,combinationCountWeight * ratingAverage);
-					//hub.linkTransformer.scale(combinationCountWeight,combinationCountWeight,combinationCountWeight);
-					//console.log(combinationCountWeight)
-
-				}
-				else{
-
-					var ratingAverage = 0;
-					hub.data.combinations.forEach(function(combination){
-						ratingAverage += combination.rating; 
-					});
-					ratingAverage /= hub.data.combinations.length;
-					ratingAverage /= 5;
-					var scale = Math.pow(ratingAverage, guiData.secondaryRatingAveragePower);
-					var scale = clamp(scale, 0.3, 1);
-
-					var ballScale = scale * 0.1;
-					hub.ballTransformer.scale(ballScale,ballScale,ballScale);
-					//var branchCountMultiplier = hub.parent.data.branchCount /  Math.pow(hub.parent.data.branchCount , guiData.secondaryDistancePower);
-					//var distance = guiData.secondaryDistance * branchCountMultiplier;
-
-					//distance /= (ratingAverage*2);
-
-					var distance = guiData.secondaryDistance;//Math.pow(guiData.primaryDistance, guiData.primaryDistancePower);
-					var ratingAverageInverse = clamp(1-ratingAverage, 0.3, 1);
-					distance *= ratingAverageInverse;
-					//distance = clamp(distance, 0.1, 1);
-					distance *= 1 + hub.parent.data.ratingAverage;  
-
-					hub.ballTransformer.translate(distance, 0, 0);
-					hub.linkTransformer.translate(distance, 0, 0);				
-					hub.connectorTransformer.scale(distance, 0.3, 1);
-
-					var angleTotal = guiData.secondaryOpenAngle;
-					var angleUnit = guiData.secondaryOpenAngle / (hub.parent.data.branchCount);	
-					var angleIndex = angleUnit * (hub.index);		
-					var angle = guiData.secondaryStartAngle - angleTotal / 2 + angleIndex;
-					hub.containerTransformer.rotate(0,0,1,angle);
-
-					
-				//	hub.containerTransformer.opacity(ratingAverage);
-
-					//hub.containerTransformer.opacity(ratingAverage);
-					
-					
-
-					//var maxCombinationCount = 0;
-					//hub.parent.data.branchesSortedByBranchCount.forEach(function(data){
-				//		maxCombinationCount = Math.max(maxCombinationCount, data.combinations.length);
-				//	});
-
-					//var combinationCountWeight = clamp(hub.data.combinations.length / maxCombinationCount, 0, maxCombinationCount);
-					//combinationCountWeight = Math.pow(combinationCountWeight, guiData.secondaryCombinationCountWeightPower);
-					//hub.ballTransformer.scale(combinationCountWeight*ratingAverage,combinationCountWeight*ratingAverage,combinationCountWeight*ratingAverage);
-					//hub.connectorTransformer.opacity(combinationCountWeight);
-				}
-
-				//var scale = (hub.data.combinations.length / hub.parent.data.combinations.length) * guiData.combinationCountScale;
-				//scale = map(scale, 0, 1, 0, 0.8);
-				hub.containerTransformer.scale(0.9,0.9,0.9);	
-			}
-		}
-		var transnformRootHub = function(dt){
-			
-		}	
-		var destroy = function(){
-			dom.empty(node);
-			rootHub = null;
-			hubs = [];
 		}
 
 		var update = function(dt){
-			if(!rootHub) return;
-			var scale = (size.y / 1500) * guiData.rootZeroScaleBalance;
+			if(!isActive) return;
 
-			if(isAnimating){
-				animationElapsed+= dt;
-				var progress= animationElapsed / animationDuration;
+		}
+		var start = function(m){
+			console.log('Featured Flavors start')
+			clean();
+			count = 0;
+			maxCount = m || 5;
+			isActive = true;
 
-				progress = Math.pow(progress, 1.5);
-				if(progress > 1) return endAnimation();
-			}
-
-			var x = size.x/2;
-			var y = size.y/2 + guiData.offsetX;
-
-			var alpha = 1;
-
-			if(isAnimating && animationElapsed >0){
-				scale += progress*animationZoom;
-
-				x += animationX * scale * progress;
-				y += animationY * scale * progress;
-
-				if(progress <= 0.03){
-					alpha = progress/0.03;
-				}
-				else if(progress >= 0.97){
-					alpha = (0.03-(progress-0.97))/0.03;
-				}
-			}
-
-
-			rootHub.containerTransformer.scale(scale,scale,scale);
-			rootHub.containerTransformer.translate(x, y, 0);
-			rootHub.containerTransformer.opacity(alpha);
+			container.appendChild(node);
+			animate();
+		}
+		var stop = function(){
+			isActive = false;
+			clean();
+			stopSignal.dispatch(self);
+		}
+		var clean = function(){
+			if(node.parentNode) node.parentNode.removeChild(node);
+			dom.empty(commentNode)
+			dom.empty(imagesNode)
+			dom.empty(namesNode)
 		}
 
-		var getNode = function (){
-			return node;
+		var animate = function(){
+			console.log(count, maxCount);
+			if(count >= maxCount) return stop();
+			count++;
+			var combination = getNextCombination();
+			if(!combination) return stop();
+			dom.empty(imagesNode)
+			dom.empty(namesNode)
+
+			commentNode.innerHTML = combination.comment;
+
+			var flavorData = [];
+			var loadedCount = 0;
+			combination.flavors.forEach(function(flavor){
+				var data = {
+					image: new Image(),
+					imageCropped: new Image(),
+					flavor:flavor
+				}
+				flavorData.push(data);
+				var onLoad = function(){
+					loadedCount ++;
+					if(loadedCount == combination.flavors.length*2){
+						onFlavorsLoaded(flavorData);
+					}
+				}
+				data.image.onload = onLoad;
+				data.imageCropped.onload = onLoad;
+
+				data.image.src = '/projection/data/flavors/'+flavor.index+'.png';
+				data.imageCropped.src = '/projection/data/flavors_cropped/'+flavor.index+'.png';
+			});
 		}
 
-		var getFlavorsById = function (){
-			return flavorsById;
+		var onFlavorsLoaded = function(flavorData){
+			flavorData.sort(sortByImageArea);
+
+			flavorData.forEach(function(data, index){
+				data.image.style.zIndex = index;
+				data.image.style.left = -data.image.width/2 + 'px';
+				var y = 0;
+				if(index>0) {
+					y = flavorData[index-1].offsetBottom + flavorData[index-1].image.height * 0.7;
+				}
+				data.offsetBottom = y;
+				data.image.style.bottom = data.offsetBottom + 'px';
+				imagesNode.appendChild(data.image);
+			});
+
+			flavorData.reverse();
+			flavorData.forEach(function(data, index){
+				var nameNode = document.createElement('div');
+				nameNode.innerHTML = data.flavor.name;
+				namesNode.appendChild(nameNode);
+			});
+
+			dom.addClass(node, 'show');
+			animationShowTimer = setTimeout(onAnimationShowEnd, 700);
+		}
+
+
+		var onAnimationShowEnd = function(){
+			animationTimer = setTimeout(onAnimationEnd, 5000);
+			dom.addClass(node, 'during');
+			dom.removeClass(node, 'show');
+		}
+		var onAnimationEnd = function(){
+			animationHideTimer = setTimeout(onAnimationHideEnd, 670);
+			dom.addClass(node, 'hide');
+			dom.removeClass(node, 'during');
+		}
+		var onAnimationHideEnd = function(){
+			dom.removeClass(node, 'hide');
+			animate();
+		}
+
+		var setCombinations = function (value){
+			combinations = value.slice(0); //clone
+			combinations.sort(sortByRating);
 		}
 
 		var setFlavorsById = function (value){
@@ -356,76 +192,59 @@ function (
 
 		var setSize = function (value){
 			size = value;
-	
-		}
-		var getSize = function (){
-			return size;
-		}
 
-		var isAnimating, animationCallback, animationElapsed, animationDuration;
-		var animationZoom, animationX, animationY;
-		var startAnimation = function(delay, duration, callback){
-			render();
-			animationCallback = callback;
-			isAnimating = true;
-			animationElapsed = -delay;
-			animationDuration = duration;
-			animationZoom = 10;
-			animationX = Math.random() * size.x/2 - size.x/4;
-			animationY = Math.random() * size.y/2 - size.y/4;
-			console.log(animationX)
-		}
-		var endAnimation = function(){
-			isAnimating = false;
-			destroy();
-			animationCallback.apply(window, [self]);
+			var scale = size.y/1080;
+
+			nodeTransformer.translate(size.x/2, size.y/2, 1);
+			nodeTransformer.scale(scale, scale, scale);	
 		}
 
-		/*function logRating(value) {
-		// position will be between 0 and 100
-			var minp = 1;
-			var maxp = 5;
+		var getStopSignal = function(){
+			return stopSignal;
+		}
 
-		// The result should be between 100 an 10000000
-			var minv = Math.log(10);
-			var maxv = Math.log(10000000);
+		var getNextCombination = function(){
+			for(var i = 0; i < combinations.length; i++){
+				if(!usedIds[combinations[i]._id]){
+					usedIds[combinations[i]._id] = true;
+					return combinations[i];
+				}
+					
+			}
+		}
 
-		// calculate adjustment factor
-			var scale = (maxv-minv) / (maxp-minp);
+		var sortByRating = function(a, b){
+			return b.rating - a.rating;
+		}
+		var sortByImageArea = function(a, b){
+			return  (b.imageCropped.height * b.imageCropped.width) - (a.imageCropped.height * a.imageCropped.width);
+		}
 
-			return Math.exp(minv + scale*(value-minp)) / 10000000 - 10;
-		}*/
 
-
-		Object.defineProperty(self, 'render', {
-			value: render
-		});
 		Object.defineProperty(self, 'update', {
 			value: update
 		});
-		Object.defineProperty(self, 'startAnimation', {
-			value: startAnimation
+		Object.defineProperty(self, 'start', {
+			value: start	
 		});
-		Object.defineProperty(self, 'destroy', {
-			value: destroy
+		Object.defineProperty(self, 'stop', {
+			value: stop
 		});
-		Object.defineProperty(self, 'node', {
-			get: getNode
-		});
-		Object.defineProperty(self, 'data', {
-			set: setData
+		Object.defineProperty(self, 'combinations', {
+			set: setCombinations
 		});
 		Object.defineProperty(self, 'flavorsById', {
-			set: setFlavorsById,
-			get: getFlavorsById
+			set: setFlavorsById
 		});
 		Object.defineProperty(self, 'size', {
-			set: setSize,
-			get: getSize
+			set: setSize
+		});
+		Object.defineProperty(self, 'stopSignal', {
+			get: getStopSignal
 		});
 
 		
 		init();
 	}
-	return TreeView;
+	return FeaturedFlavors;
 });

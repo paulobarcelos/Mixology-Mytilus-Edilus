@@ -103,7 +103,7 @@ function (
 
 		var addRandom = function () {
 			var ratings = [1,2,3,4,5];
-			var comments = ["Bot - Great", "Bot - bad", "Bot - blablabkla", "Bot - yuck!"];
+			var comments = ["Bot - Meeeeeh!","Bot - oooaaahhhhh!", "Bot - bruuummm...", "Bot - psiiiiissh", "Bot - Blaaaaam", "Bot - mmmmmmmmmm", "Bot - huh?"];
 			var data = {
 				flavorIds: [flavorsIds[0], flavorsIds[Math.floor(Math.random() * (flavorsIds.length-1) + 1)], flavorsIds[Math.floor(Math.random() * (flavorsIds.length-1) + 1)]],
 				userId: user._id,

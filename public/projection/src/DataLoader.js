@@ -85,7 +85,7 @@ function (
 				method: 'GET',
 				onSuccess: function(request){
 					parseCombinations(request.responseText);
-					setTimeout(fetchCombinations, 10000);
+					setTimeout(fetchCombinations, 1000);
 					
 				},
 				onError: function(){

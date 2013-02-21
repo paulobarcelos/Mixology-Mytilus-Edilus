@@ -1,6 +1,6 @@
-/*@import url(http://fonts.googleapis.com/css?family=Arbutus+Slab);
+@import url(http://fonts.googleapis.com/css?family=Arbutus+Slab);
 @import url(http://fonts.googleapis.com/css?family=Karla:700);
-@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400);*/
+@import url(http://fonts.googleapis.com/css?family=Quicksand:300,400);
 
 body{
 	position: fixed;
@@ -104,4 +104,150 @@ body{
 }
 #root > .link > .hub > .link > .hub > .link > .hub > .connector{
 
+}
+
+/*
+ * Featured Flavors --------------------------------------------------------------------------------------
+ */
+.featured-flavors .display-none{
+	display: none;
+}
+.featured-flavors .comment {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	position: absolute;
+	font-family: 'Karla';
+	font-weight: 700;
+	text-transform: uppercase;
+	text-align: center;
+	background-color: #fff;
+	font-size: 10em;
+	width: 1800px;
+	top: 401px;
+	left: 0;
+	margin-top: -105px;
+	margin-left: -900px;
+	height: 210px;
+	line-height: 210px;
+ }
+
+.featured-flavors .images{
+	position: absolute;
+	-webkit-transform: scale3d(1.7,1.7,0) translate3d(-170px,83px,0);
+}
+
+.featured-flavors img{
+	position: absolute;
+	bottom: 0;
+}
+
+.featured-flavors .names{
+	position: absolute;
+	-webkit-transform: translate3d(56px,-236px,0);
+	color: #fff;
+	width: 750px;
+	font-size: 5em;
+	text-align: center;
+}
+
+.featured-flavors .names > div {
+	width: 100%;
+}
+.featured-flavors .names > div:nth-child(3){
+	font-family: 'Karla', sans-serif;
+	font-style: normal;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+.featured-flavors .names > div:nth-child(1) {
+	font-family: 'Arbutus Slab', sans-serif;
+	font-weight: normal;
+	text-transform: lowercase;
+}
+.featured-flavors .names > div:nth-child(2) {
+	font-family: 'Quicksand', sans-serif;
+	font-weight: 300;
+	text-transform: uppercase;
+}
+.featured-flavors .comment,
+.featured-flavors .images,
+.featured-flavors .names{
+	opacity: 0;
+}
+.featured-flavors.during .comment,
+.featured-flavors.during .images,
+.featured-flavors.during .names{
+	opacity: 1;
+}
+.featured-flavors.show .comment{
+	-webkit-animation-duration: 0.7s;
+	-webkit-animation-timing-function: ease-out;
+	-webkit-animation-name: featured-flavors-show-comment;
+ }
+.featured-flavors.show .images,
+.featured-flavors.show .names{
+	-webkit-animation-duration: 0.7s;
+	-webkit-animation-timing-function: ease-out;
+  	-webkit-animation-name: featured-flavors-show-image;
+}
+.featured-flavors.hide .comment{
+	-webkit-animation-duration: 0.7s;
+	-webkit-animation-timing-function: ease-out;
+  	-webkit-animation-name: featured-flavors-hide-comment;
+}
+.featured-flavors.hide .images,
+.featured-flavors.hide .names{
+	-webkit-animation-duration: 0.7s;
+	-webkit-animation-timing-function: ease-out;
+  	-webkit-animation-name: featured-flavors-hide-image;
+}
+@-webkit-keyframes featured-flavors-show-comment {
+  0% {
+    opacity: 0;
+    height: 0;
+    margin-top: 0;
+  }
+ 
+  100% {
+    opacity: 1;
+    margin-top: -105px;
+    height:  210px;
+  }
+}
+@-webkit-keyframes featured-flavors-show-image {
+  0% {
+    opacity: 0;
+    top: 40px;
+  }
+ 
+  100% {
+    opacity: 1;
+    top:0;
+  }
+}
+
+@-webkit-keyframes featured-flavors-hide-comment {
+  100% {
+    opacity: 0;
+    height: 0;
+    margin-top: 0;
+  }
+ 
+  0% {
+    opacity: 1;
+    margin-top: -105px;
+    height:  210px;
+  }
+}
+@-webkit-keyframes featured-flavors-hide-image {
+  100% {
+    opacity: 0;
+    top: 40px;
+  }
+ 
+  0% {
+    opacity: 1;
+    top:0;
+  }
 }

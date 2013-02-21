@@ -6,6 +6,7 @@ define(
 	'happy/_libs/dat.gui',
 	'happy/_libs/mout/math/clamp',
 	'happy/_libs/mout/math/map',
+	'happy/_libs/signals',
 
 	'Transformer'
 ],
@@ -16,10 +17,11 @@ function (
 	Gui,
 	clamp,
 	map,
+	Signal,
 
 	Transformer
 ){
-	var TreeView = function(){
+	var TreeView = function(container){
 		var 
 		self = this,
 		flavorsById,
@@ -28,7 +30,9 @@ function (
 		rootHub,
 		size,
 		zoom,
-		hubs;
+		hubs,
+
+		stopSignal;
 
 		var 
 		gui,
@@ -60,43 +64,45 @@ function (
 		var init = function(){
 			node = document.createElement('div');
 			dom.addClass(node, 'tree');
+
+			stopSignal = new Signal();
 			
 			destroy();
 
-			gui = new Gui();
+			////gui = new Gui();
 			
 			guiData = new GuiData();
 
-			var root = gui.addFolder('Root');
+			////var root = gui.addFolder('Root');
 
-			root.add(guiData, 'zoom', 0,10);
-			root.add(guiData, 'rootZeroScaleBalance', 0,3);
+			////root.add(guiData, 'zoom', 0,10);
+			////root.add(guiData, 'rootZeroScaleBalance', 0,3);
 			//root.add(guiData, 'rootBranchCountScalePower', 0, 0.51);
-			root.add(guiData, 'offsetX', -300,300);
+			////root.add(guiData, 'offsetX', -300,300);
 			
-			var primary = gui.addFolder('Primary');
+			////var primary = gui.addFolder('Primary');
 
-			primary.add(guiData, 'primaryDistance', 0,1000);
+			////primary.add(guiData, 'primaryDistance', 0,1000);
 			//primary.add(guiData, 'primaryDistancePower', 0, 2.9999999);			
 			//primary.add(guiData, 'primaryOpenAngle', 0,360);
 			//primary.add(guiData, 'primaryStartAngle', 0,360);
-			primary.add(guiData, 'primaryRatingAveragePower', 0,3); 
+			////primary.add(guiData, 'primaryRatingAveragePower', 0,3); 
 			//primary.add(guiData, 'primaryCombinationCountWeightPower', 0,3.999999);
 
 			
-			var secondary = gui.addFolder('Secondary');
+			////var secondary = gui.addFolder('Secondary');
 
 
-			secondary.add(guiData, 'secondaryDistance', 0,35);
+			////secondary.add(guiData, 'secondaryDistance', 0,35);
 			//secondary.add(guiData, 'secondaryDistanceAlternate', 0,35);
 			//secondary.add(guiData, 'secondaryDistancePower', 0, 0.555);	
 			//secondary.add(guiData, 'secondaryOpenAngle', 0,360);
 			//secondary.add(guiData, 'secondaryStartAngle', 0,360);
-			secondary.add(guiData, 'secondaryRatingAveragePower', 0,1.5); 
+			////secondary.add(guiData, 'secondaryRatingAveragePower', 0,1.5); 
 			
 			//secondary.add(guiData, 'secondaryCombinationCountWeightPower', 0,3.999999);
 
-			gui.add(guiData, 'render');
+			////gui.add(guiData, 'render');
 
 			//gui.remember(guiData);
 
@@ -110,6 +116,7 @@ function (
 		}
 		var render = function(){
 			destroy();
+			container.appendChild(node);
 			var zeroHub = {
 				linkNode: node
 			}
@@ -300,13 +307,14 @@ function (
 			
 		}	
 		var destroy = function(){
+			if(node.parentNode) node.parentNode.removeChild(node);
 			dom.empty(node);
 			rootHub = null;
 			hubs = [];
 		}
 
 		var update = function(dt){
-			if(!rootHub) return;
+			if(!rootHub || !isAnimating) return;
 			var scale = (size.y / 1500) * guiData.rootZeroScaleBalance;
 
 			if(isAnimating){
@@ -322,7 +330,10 @@ function (
 
 			var alpha = 1;
 
+			var angle = 0;
+
 			if(isAnimating && animationElapsed >0){
+				angle = progress * animationAngle;
 				scale += progress*animationZoom;
 
 				x += animationX * scale * progress;
@@ -338,7 +349,8 @@ function (
 
 
 			rootHub.containerTransformer.scale(scale,scale,scale);
-			rootHub.containerTransformer.translate(x, y, 0);
+			rootHub.containerTransformer.translate(x, y, 0)
+			rootHub.containerTransformer.rotate(0, 0, 1, angle);
 			rootHub.containerTransformer.opacity(alpha);
 		}
 
@@ -362,23 +374,40 @@ function (
 			return size;
 		}
 
-		var isAnimating, animationCallback, animationElapsed, animationDuration;
-		var animationZoom, animationX, animationY;
-		var startAnimation = function(delay, duration, callback){
+		var isAnimating, animationElapsed, animationDuration;
+		var animationZoom, animationX, animationY, animationAngle;
+		var start = function(delay, duration){
+			console.log('Tree View start')
 			render();
-			animationCallback = callback;
 			isAnimating = true;
 			animationElapsed = -delay;
 			animationDuration = duration;
-			animationZoom = 10;
-			animationX = Math.random() * size.x/2 - size.x/4;
-			animationY = Math.random() * size.y/2 - size.y/4;
+			
+			if(data.combinations.length  < 20){
+				animationX = 0;
+				animationY = 0;
+				animationZoom = 6;
+				animationAngle = 20;
+			}
+			else if(data.combinations.length  < 50){
+				animationX = Math.random() * size.y/4 - size.y/8;
+				animationY = Math.random() * size.y/4 - size.y/8;
+				animationZoom = 8;
+				animationAngle = 50;
+			}
+			else{
+				animationX = Math.random() * size.y/3 - size.y/6;
+				animationY = Math.random() * size.y/3 - size.y/6;
+				animationZoom = 11;
+				animationAngle = 180;
+			}
+			
 			console.log(animationX)
 		}
 		var endAnimation = function(){
 			isAnimating = false;
 			destroy();
-			animationCallback.apply(window, [self]);
+			stopSignal.dispatch(self)
 		}
 
 		/*function logRating(value) {
@@ -396,6 +425,14 @@ function (
 			return Math.exp(minv + scale*(value-minp)) / 10000000 - 10;
 		}*/
 
+		var getStopSignal = function(){
+			return stopSignal;
+		}
+
+		var getIsAnimating = function(){
+			return isAnimating;
+		}
+
 
 		Object.defineProperty(self, 'render', {
 			value: render
@@ -403,8 +440,8 @@ function (
 		Object.defineProperty(self, 'update', {
 			value: update
 		});
-		Object.defineProperty(self, 'startAnimation', {
-			value: startAnimation
+		Object.defineProperty(self, 'start', {
+			value: start
 		});
 		Object.defineProperty(self, 'destroy', {
 			value: destroy
@@ -422,6 +459,14 @@ function (
 		Object.defineProperty(self, 'size', {
 			set: setSize,
 			get: getSize
+		});
+
+		Object.defineProperty(self, 'isAnimating', {
+			set: getIsAnimating
+		});
+
+		Object.defineProperty(self, 'stopSignal', {
+			get: getStopSignal
 		});
 
 		

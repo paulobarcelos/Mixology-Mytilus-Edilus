@@ -38,6 +38,7 @@ function (
 
 			combinations.forEach(function (combination) {
 				combination.flavorIds.forEach(function (id){
+					console.log(id)
 					flavorsById[id].combinations.push(combination);
 					if(!combination.flavors) combination.flavors = [];
 					combination.flavors.push(flavorsById[id]);

@@ -212,6 +212,9 @@ function (
 					
 			}
 		}
+		var resetUsedIds = function(){
+			usedIds = {};
+		}
 
 		var sortByRating = function(a, b){
 			return b.rating - a.rating;
@@ -220,7 +223,9 @@ function (
 			return  (b.imageCropped.height * b.imageCropped.width) - (a.imageCropped.height * a.imageCropped.width);
 		}
 
-
+		Object.defineProperty(self, 'resetUsedIds', {
+			value: resetUsedIds
+		});
 		Object.defineProperty(self, 'update', {
 			value: update
 		});

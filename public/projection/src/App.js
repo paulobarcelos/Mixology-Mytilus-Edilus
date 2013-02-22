@@ -63,6 +63,7 @@ function (
 		}
 
 		var onFlavorsLoaded = function(loader){
+			console.log('flavors',loader.flavors);
 			database.flavors = loader.flavors;
 			treeView.flavorsById = database.flavorsById;
 			treeViewTimeline.flavorsById = database.flavorsById;
@@ -73,6 +74,7 @@ function (
 
 		var firstRun = true;
 		var onCombinationsUpdated = function(loader){
+			console.log('combinations',loader.latestCombinations);
 			database.add(loader.latestCombinations);
 			treeView.data = database.tree;
 			featuredCombinations.combinations = database.combinations;
@@ -139,6 +141,7 @@ function (
 					break;
 				case '9':
 					removeAllSignals();	
+					featuredCombinations.resetUsedIds();
 					featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
 					featuredCombinations.start();			
 					break;

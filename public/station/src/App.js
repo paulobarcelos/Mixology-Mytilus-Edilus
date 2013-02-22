@@ -62,8 +62,9 @@ function (
 			var dropcache = (window.location.search.indexOf('dropcache')!=-1);
 			if(dropcache){
 				localStorage.removeItem('user'); 
-				localStorage.removeItem('flavors'); 
+				
 			}
+			localStorage.removeItem('flavors'); 
 
 			var userData = localStorage.getItem('user'); 
 			if(userData) onUserDataAcquired(userData);

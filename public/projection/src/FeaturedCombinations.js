@@ -115,6 +115,11 @@ function (
 			dom.empty(namesNode)
 
 			commentNode.innerHTML = combination.comment;
+			var fontSize = 10;
+			if(combination.comment.length>15){
+				fontSize = 10 - combination.comment.length / 8;
+			}
+			commentNode.style.fontSize = fontSize + 'em';
 
 			var flavorData = [];
 			var loadedCount = 0;

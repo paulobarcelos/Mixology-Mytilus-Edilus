@@ -29,14 +29,14 @@ body{
 }
 .link{
 	position: absolute;
-}
+} 
 #root > .connector,
 #root > .ball,
 #root > .link > .hub > .connector{
 	display: none;
 }
 #root > .link > .hub > .ball{
-	border: solid 4px #000;
+	border: solid 4px rgb(86,208,239);
 	/*height: 40px;
 	width: 40px;
 	margin-top: -20px;
@@ -60,7 +60,7 @@ body{
 	height: 2px;
 	width: 1px;
 	margin-top: -1px;
-	background-color: rgba(255,255,255,0.09);
+	background-color: rgba(255,255,255,1);
 }
 .ball{
 	z-index: 1;
@@ -122,7 +122,7 @@ body{
 	text-transform: uppercase;
 	text-align: center;
 	background-color: #fff;
-	font-size: 10em;
+	font-size: 8em;
 	width: 1800px;
 	top: 401px;
 	left: 0;

@@ -17,8 +17,8 @@ function (
 		var 
 		self = this,
 		container,
-		//host = "http://mixology.eu01.aws.af.cm/",
-		host = "http://127.0.0.1:8000/",
+		host = "http://mixology.eu01.aws.af.cm/",
+		//host = "http://127.0.0.1:8000/",
 		action = 'combinations'; 
 
 		var setup = function(){	

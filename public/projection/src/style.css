@@ -372,16 +372,58 @@ body{
 
 
 /* Combination ranking --------------------------------------------------------------------------------------*/
+.combination-ranking.show{
+	-webkit-animation-duration: 1.5s;
+	-webkit-animation-timing-function: ease-out;
+	-webkit-animation-name: flavor-bars-show-name;
+}
+.combination-ranking.hide{
+	-webkit-animation-duration: 1.5s;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-name: flavor-bars-hide-name;
+}
+.combination-ranking .item  {
+	background-color: rgba(255,255,255,0.16);
+	border-radius: 201px;
+	padding: 10px 63px;
+	width: 2000px;
+	margin-bottom: 17px;
+}
+.combination-ranking h1{
+	color: #fff;
+
+font-family: Quicksand;
+text-transform: uppercase;
+text-align: center;
+font-size: 10em;
+
+width: 2000px;
+margin: 0;
+letter-spacing: 15px;
+}
+.combination-ranking.negative h1:after{
+	content: ' ;s';
+}
+.combination-ranking.positive h1:after{
+	content: ' ;D';
+}
+.combination-ranking.positive h1{
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-name: blink-emoticon;
+	-webkit-animation-direction: alternate;
+	-webkit-animation-iteration-count: infinite;
+}
 .combination-ranking .item .wrapper {
 	display: inline-block;
-	width: 450px;
+	width: 666px;
 }
 .combination-ranking .item .wrapper:last-child {
 
 	margin-right: 0;
 }
 .combination-ranking .item .wrapper:nth-child(1) .image{
-	background-size: 85%;
+	background-size: 62%;
 
 }
 .combination-ranking .item .image {
@@ -389,15 +431,21 @@ body{
 	width: 100%;
 	height: 250px;
 	background-repeat: no-repeat;
-	
 }
 .combination-ranking .item .name {
-
 	display: block;
-width: 100%;
-text-align: center;
-color: #fff;
-font-size: 2em;
-font-family: 'Karla';
-text-transform: uppercase;
+	width: 100%;
+	text-align: center;
+	color: #fff;
+	font-size: 2em;
+	font-family: 'Karla';
+	text-transform: uppercase;
+}
+@-webkit-keyframes blink-emoticon {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
 }

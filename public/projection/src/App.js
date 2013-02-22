@@ -32,8 +32,9 @@ function (
 		featuredCombinations,
 		flavorBars,
 		combinationRankingPositive,
-		//host = "http://mixology.eu01.aws.af.cm/";
-		host = "http://127.0.0.1:8000/";
+		combinationRankingNegative,
+		host = "http://mixology.eu01.aws.af.cm/";
+		//host = "http://127.0.0.1:8000/";
 
 		var setup = function(){	
 			//self.setFPS(0);
@@ -43,7 +44,8 @@ function (
 			treeView = new TreeView(self.container);		
 			featuredCombinations = new FeaturedCombinations(self.container);
 			flavorBars = new FlavorBars(self.container);
-			combinationRankingPositive = new CombinationRanking(self.container);
+			combinationRankingPositive = new CombinationRanking(self.container, "awesome", true);
+			combinationRankingNegative = new CombinationRanking(self.container, "awful", false);
 
 			var dataLoader = new DataLoader({
 				api: host + 'api/',
@@ -66,6 +68,7 @@ function (
 			treeViewTimeline.flavorsById = database.flavorsById;
 			flavorBars.flavorsById = database.flavorsById;
 			combinationRankingPositive.flavorsById = database.flavorsById;
+			combinationRankingNegative.flavorsById = database.flavorsById;
 		}
 
 		var firstRun = true;
@@ -76,13 +79,15 @@ function (
 			flavorBars.combinations = database.combinations;
 			combinationRankingPositive.combinations = database.combinations;
 			combinationRankingPositive.combinationsByUid = database.combinationsByUid;
+			combinationRankingNegative.combinations = database.combinations;
+			combinationRankingNegative.combinationsByUid = database.combinationsByUid;
 
 			if(treeView.isAnimating) treeView.render();
 			if(firstRun){
 				firstRun = false;
 				
-				//featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
-				//featuredCombinations.start();
+				featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
+				featuredCombinations.start();
 			}
 		}
 
@@ -92,6 +97,7 @@ function (
 			featuredCombinations.size = size;
 			flavorBars.size = size;
 			combinationRankingPositive.size = size;
+			combinationRankingNegative.size = size;
 		}
 
 		var onFeaturedCombinationsStop = function(){
@@ -125,13 +131,13 @@ function (
 					break;
 				case '4':
 					removeAllSignals();	
-					combinationRankingPositive.start();			
+					combinationRankingPositive.exit(combinationRankingNegative.start);				
 					break;
 				case '6':
-					//removeAllSignals();	
-					//treeViewTimeline.exit();				
+					removeAllSignals();	
+					combinationRankingNegative.exit(featuredCombinations.start);			
 					break;
-				case '90':
+				case '9':
 					removeAllSignals();	
 					featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
 					featuredCombinations.start();			

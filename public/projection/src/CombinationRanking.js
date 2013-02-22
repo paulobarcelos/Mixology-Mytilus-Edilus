@@ -24,7 +24,7 @@ function (
 	var CombinationRanking = function(container, title, isPositive){
 		var 
 		self = this,
-		title = title || 'Comvinations',
+		title = title || 'Awesome',
 		isPositive = (typeof isPositive !== 'undefined') ? isPositive : true,
 		
 		stopSignal,
@@ -56,6 +56,7 @@ function (
 			
 			node = document.createElement('div');
 			dom.addClass(node, 'combination-ranking');
+			dom.addClass(node, (isPositive) ? 'positive' : 'negative');
 			nodeTransformer = new Transformer(node);
 			nodeTransformer.origin(0,0);
 			//nodeTransformer.rotate(0,0,1, -90);
@@ -100,7 +101,7 @@ function (
 			}
 			else uids.sort(sortNegative);
 
-			for(var i = 0; i <  5;  i++){
+			for(var i = 0; i <  4;  i++){
 				var uid = uids[i];
 
 				var combinationNode = document.createElement('div');
@@ -178,7 +179,7 @@ function (
 		var setSize = function (value){
 			size = value;
 
-			var scale = size.y/1280;
+			var scale = size.y/1480;
 
 			nodeTransformer.translate(size.x/2 - 1000 * scale , 0, 1);
 			nodeTransformer.scale(scale, scale, scale);	

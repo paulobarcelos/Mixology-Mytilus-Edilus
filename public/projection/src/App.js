@@ -135,15 +135,17 @@ function (
 					removeAllSignals();	
 					combinationRankingPositive.exit(combinationRankingNegative.start);				
 					break;
-				case '6':
+				case '5':
 					removeAllSignals();	
-					combinationRankingNegative.exit(featuredCombinations.start);			
+					combinationRankingNegative.exit();			
 					break;
 				case '9':
 					removeAllSignals();	
 					featuredCombinations.resetUsedIds();
+
 					featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
-					featuredCombinations.start();			
+					featuredCombinations.start();
+					featuredCombinations.maxCount = 99999;		
 					break;
 			}
 		}

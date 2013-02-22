@@ -171,10 +171,10 @@ function (
 
 			var scale = size.x/2700;
 
-			nodeTransformer.translate(size.x/2 - dom.size(barsNode).y * scale / 2, size.y - 490 * scale, 1);
+			nodeTransformer.translate(size.x/2 - dom.size(barsNode).y * scale / 2, size.y - 500 * scale, 1);
 			nodeTransformer.scale(scale, scale, scale);	
 
-			barsNode.style.width = size.y / scale - 540 + 'px';
+			barsNode.style.width = size.y / scale - 620 + 'px';
 		}
 		var getStopSignal = function(){
 			return stopSignal;

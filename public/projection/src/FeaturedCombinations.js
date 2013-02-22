@@ -94,6 +94,7 @@ function (
 			animate();
 		}
 		var stop = function(){
+			console.log('Featured Flavors stop')
 			isActive = false;
 			clean();
 			stopSignal.dispatch(self);
@@ -204,6 +205,10 @@ function (
 			nodeTransformer.scale(scale, scale, scale);	
 		}
 
+		var setMaxCount = function(value){
+			maxCount = value;
+		}
+
 		var getStopSignal = function(){
 			return stopSignal;
 		}
@@ -239,6 +244,9 @@ function (
 		});
 		Object.defineProperty(self, 'stop', {
 			value: stop
+		});
+		Object.defineProperty(self, 'maxCount', {
+			set: setMaxCount
 		});
 		Object.defineProperty(self, 'combinations', {
 			set: setCombinations

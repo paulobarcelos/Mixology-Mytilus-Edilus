@@ -179,9 +179,9 @@ function (
 		var setSize = function (value){
 			size = value;
 
-			var scale = size.y/1480;
+			var scale = size.y/2000;
 
-			nodeTransformer.translate(size.x/2 - 1000 * scale , 0, 1);
+			nodeTransformer.translate(size.x/2 - 1000 * scale , 165, 1);
 			nodeTransformer.scale(scale, scale, scale);	
 
 		}

@@ -21,7 +21,7 @@ function (
 
 	Transformer
 ){
-	var FeaturedFlavors = function(container){
+	var FeaturedCombinations = function(container){
 		var 
 		self = this,
 		
@@ -83,11 +83,11 @@ function (
 			if(!isActive) return;
 
 		}
-		var start = function(m){
+		var start = function(){
 			console.log('Featured Flavors start')
 			clean();
 			count = 0;
-			maxCount = m || 5;
+			maxCount = 20;
 			isActive = true;
 
 			container.appendChild(node);
@@ -106,11 +106,11 @@ function (
 		}
 
 		var animate = function(){
-			console.log(count, maxCount);
 			if(count >= maxCount) return stop();
 			count++;
 			var combination = getNextCombination();
 			if(!combination) return stop();
+
 			dom.empty(imagesNode)
 			dom.empty(namesNode)
 
@@ -193,7 +193,7 @@ function (
 		var setSize = function (value){
 			size = value;
 
-			var scale = size.y/1080;
+			var scale = size.y/1080 * 0.8;
 
 			nodeTransformer.translate(size.x/2, size.y/2, 1);
 			nodeTransformer.scale(scale, scale, scale);	
@@ -246,5 +246,5 @@ function (
 		
 		init();
 	}
-	return FeaturedFlavors;
+	return FeaturedCombinations;
 });

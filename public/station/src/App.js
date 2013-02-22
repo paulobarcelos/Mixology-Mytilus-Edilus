@@ -40,6 +40,7 @@ function (
 		endScreen,
 		commentSelector,
 		host = "http://mixology.eu01.aws.af.cm/";
+		//host = "http://127.0.0.1:8000/";
 
 		var setup = function(){	
 			self.setFPS(0);

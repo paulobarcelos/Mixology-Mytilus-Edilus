@@ -43,7 +43,7 @@ function (
 
 			var data = combinations[0];
 
-			/*ajax({
+			ajax({
 				url: host + 'api/combinations',
 				method: 'POST',
 				headers: {'Content-type': 'application/json'},
@@ -54,35 +54,13 @@ function (
 					combinationsString = JSON.stringify(combinations);
 					localStorage['combinations'] = combinationsString;
 					
-					publish();
+					setTimeout(publish, 3000);
 				},
 				onError: function(){
 					// wait a bit and repeat!
 					setTimeout(publish, 3000);
 				}
-			});*/
-
-			$.ajax({
-				url: host + 'api/combinations',
-				type: "POST",
-				contentType: 'application/json',
-				dataType: 'json',
-				processData: false,
-				async: true,
-				data: JSON.stringify(data),
-				success: function(reponse){
-					// remove from the queue and keep publishing!
-					combinations.shift();
-					combinationsString = JSON.stringify(combinations);
-					localStorage['combinations'] = combinationsString;
-					
-					setTimeout(publish, 5000);
-				},
-				error: function(){
-					// wait a bit and repeat!
-					setTimeout(publish, 5000);
-				}
-			})
+			});
 		}
 
 		Object.defineProperty(self, 'start', {

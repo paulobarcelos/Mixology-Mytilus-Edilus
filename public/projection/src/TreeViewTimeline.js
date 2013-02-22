@@ -8,7 +8,8 @@ define(
 	'happy/_libs/mout/math/map',
 	'happy/_libs/signals',
 
-	'Transformer'
+	'Transformer',
+	'Database'
 ],
 function (
 	dom,
@@ -19,9 +20,10 @@ function (
 	map,
 	Signal,
 
-	Transformer
+	Transformer,
+	Database
 ){
-	var TreeView = function(container){
+	var TreeViewTimeline = function(container, dataLoader){
 		var 
 		self = this,
 		flavorsById,
@@ -31,6 +33,13 @@ function (
 		size,
 		zoom,
 		hubs,
+
+		combinations,
+		combinationsReference,
+		totalCombinations,
+		timeStep,
+		progress,
+		animationTimer,
 
 		stopSignal;
 
@@ -68,51 +77,22 @@ function (
 			stopSignal = new Signal();
 			
 			destroy();
-
-			////gui = new Gui();
 			
 			guiData = new GuiData();
 
-			////var root = gui.addFolder('Root');
-
-			////root.add(guiData, 'zoom', 0,10);
-			////root.add(guiData, 'rootZeroScaleBalance', 0,3);
-			//root.add(guiData, 'rootBranchCountScalePower', 0, 0.51);
-			////root.add(guiData, 'offsetX', -300,300);
-			
-			////var primary = gui.addFolder('Primary');
-
-			////primary.add(guiData, 'primaryDistance', 0,1000);
-			//primary.add(guiData, 'primaryDistancePower', 0, 2.9999999);			
-			//primary.add(guiData, 'primaryOpenAngle', 0,360);
-			//primary.add(guiData, 'primaryStartAngle', 0,360);
-			////primary.add(guiData, 'primaryRatingAveragePower', 0,3); 
-			//primary.add(guiData, 'primaryCombinationCountWeightPower', 0,3.999999);
-
-			
-			////var secondary = gui.addFolder('Secondary');
-
-
-			////secondary.add(guiData, 'secondaryDistance', 0,35);
-			//secondary.add(guiData, 'secondaryDistanceAlternate', 0,35);
-			//secondary.add(guiData, 'secondaryDistancePower', 0, 0.555);	
-			//secondary.add(guiData, 'secondaryOpenAngle', 0,360);
-			//secondary.add(guiData, 'secondaryStartAngle', 0,360);
-			////secondary.add(guiData, 'secondaryRatingAveragePower', 0,1.5); 
-			
-			//secondary.add(guiData, 'secondaryCombinationCountWeightPower', 0,3.999999);
-
-			////gui.add(guiData, 'render');
-
-			//gui.remember(guiData);
-
 			zoom = 1;
+
+			progress = document.createElement('div');
+			progress.style.position = 'fixed';
+			progress.style.top = 0;
+			progress.style.left = 0;
+			progress.style.height = "15px";
+			progress.style.backgroundColor = "#fff";
+			isActive = false;
 
 		}
 		var setData = function(value){
-			data = value;
-			console.log(data)
-			if(isAnimating) render();
+			data = value;;
 		}
 		var render = function(){
 			destroy();
@@ -121,7 +101,7 @@ function (
 				linkNode: node
 			}
 			rootHub = createHub('NULL', data, zeroHub, 0);
-			
+			update();
 		}
 
 		var createHub = function(flavorId, data, parent, index){
@@ -228,23 +208,6 @@ function (
 					hub.containerTransformer.rotate(0,0,1,angle);
 
 					//var maxCombinationCount = 0;
-					//hub.parent.data.branchesSortedByBranchCount.forEach(function(data){
-					//	maxCombinationCount = Math.max(maxCombinationCount, data.combinations.length);
-					//});
-
-					
-					//hub.ballTransformer.opacity(ratingAverage);
-					//hub.connectorTransformer.opacity(ratingAverage);
-					
-
-
-					//var combinationCountWeight = clamp(hub.data.combinations.length / maxCombinationCount, 0, maxCombinationCount);
-					//combinationCountWeight = Math.pow(combinationCountWeight, guiData.primaryCombinationCountWeightPower);
-					//hub.containerTransformer.opacity(Math.pow(combinationCountWeight, guiData.secondaryCombinationCountWeightPower));
-					//hub.ballTransformer.scale(combinationCountWeight * ratingAverage,combinationCountWeight * ratingAverage,combinationCountWeight * ratingAverage);
-					//hub.linkTransformer.scale(combinationCountWeight,combinationCountWeight,combinationCountWeight);
-					//console.log(combinationCountWeight)
-
 				}
 				else{
 
@@ -259,10 +222,6 @@ function (
 
 					var ballScale = scale * 0.1;
 					hub.ballTransformer.scale(ballScale,ballScale,ballScale);
-					//var branchCountMultiplier = hub.parent.data.branchCount /  Math.pow(hub.parent.data.branchCount , guiData.secondaryDistancePower);
-					//var distance = guiData.secondaryDistance * branchCountMultiplier;
-
-					//distance /= (ratingAverage*2);
 
 					var distance = guiData.secondaryDistance;//Math.pow(guiData.primaryDistance, guiData.primaryDistancePower);
 					var ratingAverageInverse = clamp(1-ratingAverage, 0.3, 1);
@@ -280,22 +239,6 @@ function (
 					var angle = guiData.secondaryStartAngle - angleTotal / 2 + angleIndex;
 					hub.containerTransformer.rotate(0,0,1,angle);
 
-					
-				//	hub.containerTransformer.opacity(ratingAverage);
-
-					//hub.containerTransformer.opacity(ratingAverage);
-					
-					
-
-					//var maxCombinationCount = 0;
-					//hub.parent.data.branchesSortedByBranchCount.forEach(function(data){
-				//		maxCombinationCount = Math.max(maxCombinationCount, data.combinations.length);
-				//	});
-
-					//var combinationCountWeight = clamp(hub.data.combinations.length / maxCombinationCount, 0, maxCombinationCount);
-					//combinationCountWeight = Math.pow(combinationCountWeight, guiData.secondaryCombinationCountWeightPower);
-					//hub.ballTransformer.scale(combinationCountWeight*ratingAverage,combinationCountWeight*ratingAverage,combinationCountWeight*ratingAverage);
-					//hub.connectorTransformer.opacity(combinationCountWeight);
 				}
 
 				//var scale = (hub.data.combinations.length / hub.parent.data.combinations.length) * guiData.combinationCountScale;
@@ -317,13 +260,6 @@ function (
 			if(!rootHub) return;
 			var scale = (size.y / 1500) * guiData.rootZeroScaleBalance;
 
-			if(isAnimating){
-				animationElapsed+= dt;
-				var progress= animationElapsed / animationDuration;
-
-				progress = Math.pow(progress, 1.5);
-				if(progress > 1) return endAnimation();
-			}
 
 			var x = size.x/2;
 			var y = size.y/2 + guiData.offsetX;
@@ -331,22 +267,6 @@ function (
 			var alpha = 1;
 
 			var angle = 0;
-
-			if(isAnimating && animationElapsed >0){
-				angle = progress * animationAngle;
-				scale += progress*animationZoom;
-
-				x += animationX * scale * progress;
-				y += animationY * scale * progress;
-
-				if(progress <= 0.03){
-					alpha = progress/0.03;
-				}
-				else if(progress >= 0.97){
-					alpha = (0.03-(progress-0.97))/0.03;
-				}
-			}
-
 
 			rootHub.containerTransformer.scale(scale,scale,scale);
 			rootHub.containerTransformer.translate(x, y, 0)
@@ -374,55 +294,56 @@ function (
 			return size;
 		}
 
-		var isAnimating, animationElapsed, animationDuration;
-		var animationZoom, animationX, animationY, animationAngle;
-		var start = function(delay, duration){
-			console.log('Tree View start')
-			render();
-			isAnimating = true;
-			animationElapsed = -delay;
-			animationDuration = duration;
-			
-			if(data.combinations.length  < 20){
-				animationX = 0;
-				animationY = 0;
-				animationZoom = 6;
-				animationAngle = 20;
-			}
-			else if(data.combinations.length  < 50){
-				animationX = Math.random() * size.y/4 - size.y/8;
-				animationY = Math.random() * size.y/4 - size.y/8;
-				animationZoom = 8;
-				animationAngle = 50;
-			}
-			else{
-				animationX = Math.random() * size.y/3 - size.y/6;
-				animationY = Math.random() * size.y/3 - size.y/6;
-				animationZoom = 11;
-				animationAngle = 180;
-			}
+		var start = function(duration){
+			console.log('Tree View Timeline start')
+			combinationsReference = dataLoader.combinations;
+			combinations = [];
+			duration = duration || 120;
+			duration *= 1000;
+			timeStep = duration/combinationsReference.length;
+			totalCombinations = combinationsReference.length;
+			document.body.appendChild(progress);
+			isActive = true;
+			animationStep();
 			
 		}
+
+		var exit = function(callback){
+			if(callback) stopSignal.addOnce(callback);
+			if(isActive) endAnimation();
+			else stopSignal.dispatch(self);
+		}
+
+		var animationStep = function(){
+			if(!combinationsReference.length) endAnimation();
+
+			combinations.push(combinationsReference.shift());
+			combinations.push(combinationsReference.shift());
+			combinations.push(combinationsReference.shift());
+			combinations.push(combinationsReference.shift());
+			combinations.push(combinationsReference.shift());
+			combinations.push(combinationsReference.shift());
+			combinations.push(combinationsReference.shift());
+			
+			var database = new Database();
+			database.flavors = dataLoader.flavors;
+			database.add(combinations);
+			setData(database.tree);
+
+			render();
+
+			progress.style.width = ((combinations.length / totalCombinations) * size .y )+ 'px';
+
+			animationTimer = setTimeout(animationStep, 20);
+		}
+
 		var endAnimation = function(){
 			isAnimating = false;
+			clearTimeout(animationTimer);
+			if(progress && progress.parentNode)progress.parentNode.removeChild(progress);
 			destroy();
 			stopSignal.dispatch(self)
 		}
-
-		/*function logRating(value) {
-		// position will be between 0 and 100
-			var minp = 1;
-			var maxp = 5;
-
-		// The result should be between 100 an 10000000
-			var minv = Math.log(10);
-			var maxv = Math.log(10000000);
-
-		// calculate adjustment factor
-			var scale = (maxv-minv) / (maxp-minp);
-
-			return Math.exp(minv + scale*(value-minp)) / 10000000 - 10;
-		}*/
 
 		var getStopSignal = function(){
 			return stopSignal;
@@ -436,11 +357,11 @@ function (
 		Object.defineProperty(self, 'render', {
 			value: render
 		});
-		Object.defineProperty(self, 'update', {
-			value: update
-		});
 		Object.defineProperty(self, 'start', {
 			value: start
+		});
+		Object.defineProperty(self, 'exit', {
+			value: exit
 		});
 		Object.defineProperty(self, 'destroy', {
 			value: destroy
@@ -471,5 +392,5 @@ function (
 		
 		init();
 	}
-	return TreeView;
+	return TreeViewTimeline;
 });

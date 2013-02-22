@@ -6,7 +6,10 @@ define(
 	'DataLoader',
 	'Database',
 	'TreeView',
-	'FeaturedFlavors'
+	'TreeViewTimeline',
+	'FeaturedCombinations',
+	'FlavorBars',
+	'CombinationRanking'
 ],
 function (
 	BaseApp,
@@ -15,66 +18,89 @@ function (
 	DataLoader,
 	Database,
 	TreeView,
-	FeaturedFlavors
+	TreeViewTimeline,
+	FeaturedCombinations,
+	FlavorBars,
+	CombinationRanking
 ){
 	var App = function(){
 		var 
 		self = this,
 		database,
 		treeView,
-		featuredFlavors;
+		treeViewTimeline,
+		featuredCombinations,
+		flavorBars,
+		combinationRankingPositive,
+		//host = "http://mixology.eu01.aws.af.cm/";
+		host = "http://127.0.0.1:8000/";
 
 		var setup = function(){	
 			//self.setFPS(0);
 
 			database = new Database();
 
-			treeView = new TreeView(self.container);
-			treeView.stopSignal.add(onTreeViewStop);
-
-			featuredFlavors = new FeaturedFlavors(self.container);
-			featuredFlavors.stopSignal.add(onFeaturedFlavorsStop);
+			treeView = new TreeView(self.container);		
+			featuredCombinations = new FeaturedCombinations(self.container);
+			flavorBars = new FlavorBars(self.container);
+			combinationRankingPositive = new CombinationRanking(self.container);
 
 			var dataLoader = new DataLoader({
-				api: "http://mixology.eu01.aws.af.cm/api/",
+				api: host + 'api/',
 				flavors: 'flavors',
 				combinations: 'combinations'
 			})
 			dataLoader.combinationsUpdatedSignal.add(onCombinationsUpdated);
 			dataLoader.flavorsLoadedSignal.add(onFlavorsLoaded);
 
-			
-			dataLoader.load();			
+			treeViewTimeline = new TreeViewTimeline(self.container, dataLoader);
+
+			dataLoader.load();	
+
+					
 		}
 
 		var onFlavorsLoaded = function(loader){
 			database.flavors = loader.flavors;
 			treeView.flavorsById = database.flavorsById;
+			treeViewTimeline.flavorsById = database.flavorsById;
+			flavorBars.flavorsById = database.flavorsById;
+			combinationRankingPositive.flavorsById = database.flavorsById;
 		}
 
 		var firstRun = true;
 		var onCombinationsUpdated = function(loader){
 			database.add(loader.latestCombinations);
 			treeView.data = database.tree;
-			featuredFlavors.combinations = database.combinations;
+			featuredCombinations.combinations = database.combinations;
+			flavorBars.combinations = database.combinations;
+			combinationRankingPositive.combinations = database.combinations;
+			combinationRankingPositive.combinationsByUid = database.combinationsByUid;
 
 			if(treeView.isAnimating) treeView.render();
 			if(firstRun){
 				firstRun = false;
-				featuredFlavors.start();
+				
+				//featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
+				//featuredCombinations.start();
 			}
 		}
 
 		var onResize = function(size){
 			treeView.size = size;
-			featuredFlavors.size = size;
+			treeViewTimeline.size = size;
+			featuredCombinations.size = size;
+			flavorBars.size = size;
+			combinationRankingPositive.size = size;
 		}
 
-		var onFeaturedFlavorsStop = function(){
+		var onFeaturedCombinationsStop = function(){
+			treeView.stopSignal.addOnce(onTreeViewStop);
 			treeView.start(0,60);
 		}
 		var onTreeViewStop = function(){
-			featuredFlavors.start();
+			featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
+			featuredCombinations.start();
 		}
 
 		var onKeyUp = function(e) {	
@@ -82,18 +108,46 @@ function (
 				case 'SPACEBAR':
 					self.toggleFullscreen();					
 					break;
-				case 'A':
-					treeView.startAnimation(0,20, function(){console.log('end!')});					
+				case '0':
+					removeAllSignals();			
 					break;
-				case 'B':
-					featuredFlavors.start(4);					
+				case '1':
+					removeAllSignals();	
+					treeViewTimeline.start();				
+					break;
+				case '2':
+					removeAllSignals();	
+					treeViewTimeline.exit(flavorBars.start);					
+					break;
+				case '3':
+					removeAllSignals();	
+					flavorBars.exit(combinationRankingPositive.start);			
+					break;
+				case '4':
+					removeAllSignals();	
+					combinationRankingPositive.start();			
+					break;
+				case '6':
+					//removeAllSignals();	
+					//treeViewTimeline.exit();				
+					break;
+				case '90':
+					removeAllSignals();	
+					featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
+					featuredCombinations.start();			
 					break;
 			}
 		}
 
+		var removeAllSignals = function(){
+			treeView.stopSignal.removeAll();
+			featuredCombinations.stopSignal.removeAll();
+			flavorBars.stopSignal.removeAll();
+		}
+
 		var update = function(dt){
 			treeView.update(dt);
-			featuredFlavors.update(dt);
+			featuredCombinations.update(dt);
 		}
 		var draw = function(dt){
 			

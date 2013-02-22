@@ -15,7 +15,8 @@ function (
 	var App = function(){
 		var 
 		self = this,
-		host = "http://mixology.eu01.aws.af.cm/",
+		//host = "http://mixology.eu01.aws.af.cm/",
+		host = "http://127.0.0.1:8000/",
 		action = 'flavors'; 
 
 		var setup = function(){	

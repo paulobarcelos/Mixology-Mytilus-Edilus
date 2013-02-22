@@ -85,7 +85,7 @@ function (
 				method: 'GET',
 				onSuccess: function(request){
 					parseCombinations(request.responseText);
-					setTimeout(fetchCombinations, 1000);
+					setTimeout(fetchCombinations, 10000);
 					
 				},
 				onError: function(){
@@ -109,7 +109,7 @@ function (
 			return flavors;
 		}
 		var getCombinations = function(){
-			return combinations;
+			return combinations.slice(0);
 		}
 		var getLatestCombinations = function(){
 			return latestCombinations;

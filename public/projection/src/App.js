@@ -103,11 +103,13 @@ function (
 		}
 
 		var onFeaturedCombinationsStop = function(){
-			treeView.stopSignal.addOnce(onTreeViewStop);
+			featuredCombinations.stopSignal.remove(onFeaturedCombinationsStop);
+			treeView.stopSignal.add(onTreeViewStop);
 			treeView.start(0,60);
 		}
 		var onTreeViewStop = function(){
-			featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
+			treeView.stopSignal.remove(onTreeViewStop);
+			featuredCombinations.stopSignal.add(onFeaturedCombinationsStop);
 			featuredCombinations.start();
 		}
 
@@ -135,15 +137,17 @@ function (
 					removeAllSignals();	
 					combinationRankingPositive.exit(combinationRankingNegative.start);				
 					break;
-				case '6':
+				case '5':
 					removeAllSignals();	
-					combinationRankingNegative.exit(featuredCombinations.start);			
+					combinationRankingNegative.exit();			
 					break;
 				case '9':
 					removeAllSignals();	
 					featuredCombinations.resetUsedIds();
+
 					featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
-					featuredCombinations.start();			
+					featuredCombinations.start();
+					featuredCombinations.maxCount = 99999;		
 					break;
 			}
 		}

@@ -84,7 +84,7 @@ function (
 
 			progress = document.createElement('div');
 			progress.style.position = 'fixed';
-			progress.style.top = 0;
+			progress.style.bottom = 0;
 			progress.style.left = 0;
 			progress.style.height = "15px";
 			progress.style.backgroundColor = "#fff";
@@ -317,13 +317,11 @@ function (
 		var animationStep = function(){
 			if(!combinationsReference.length) endAnimation();
 
-			combinations.push(combinationsReference.shift());
-			combinations.push(combinationsReference.shift());
-			combinations.push(combinationsReference.shift());
-			combinations.push(combinationsReference.shift());
-			combinations.push(combinationsReference.shift());
-			combinations.push(combinationsReference.shift());
-			combinations.push(combinationsReference.shift());
+			for(var i = 0; i < 4; i++){
+				var combination = combinationsReference.shift();
+				if(combination) combinations.push(combination);
+			}
+			
 			
 			var database = new Database();
 			database.flavors = dataLoader.flavors;

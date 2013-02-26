@@ -94,6 +94,7 @@ function (
 			animate();
 		}
 		var stop = function(){
+			console.log('Featured Flavors stop')
 			isActive = false;
 			clean();
 			stopSignal.dispatch(self);
@@ -115,6 +116,11 @@ function (
 			dom.empty(namesNode)
 
 			commentNode.innerHTML = combination.comment;
+			var fontSize = 10;
+			if(combination.comment.length>15){
+				fontSize = 10 - combination.comment.length / 8;
+			}
+			commentNode.style.fontSize = fontSize + 'em';
 
 			var flavorData = [];
 			var loadedCount = 0;
@@ -199,6 +205,10 @@ function (
 			nodeTransformer.scale(scale, scale, scale);	
 		}
 
+		var setMaxCount = function(value){
+			maxCount = value;
+		}
+
 		var getStopSignal = function(){
 			return stopSignal;
 		}
@@ -234,6 +244,9 @@ function (
 		});
 		Object.defineProperty(self, 'stop', {
 			value: stop
+		});
+		Object.defineProperty(self, 'maxCount', {
+			set: setMaxCount
 		});
 		Object.defineProperty(self, 'combinations', {
 			set: setCombinations

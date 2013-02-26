@@ -103,11 +103,13 @@ function (
 		}
 
 		var onFeaturedCombinationsStop = function(){
-			treeView.stopSignal.addOnce(onTreeViewStop);
+			featuredCombinations.stopSignal.remove(onFeaturedCombinationsStop);
+			treeView.stopSignal.add(onTreeViewStop);
 			treeView.start(0,60);
 		}
 		var onTreeViewStop = function(){
-			featuredCombinations.stopSignal.addOnce(onFeaturedCombinationsStop);
+			treeView.stopSignal.remove(onTreeViewStop);
+			featuredCombinations.stopSignal.add(onFeaturedCombinationsStop);
 			featuredCombinations.start();
 		}
 

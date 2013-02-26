@@ -322,7 +322,7 @@ function (
 				var progress= animationElapsed / animationDuration;
 
 				progress = Math.pow(progress, 1.5);
-				if(progress > 1) return endAnimation();
+				if(progress >= 1) return endAnimation();
 			}
 
 			var x = size.x/2;
@@ -404,6 +404,7 @@ function (
 			
 		}
 		var endAnimation = function(){
+			console.log('Tree View endAnimation')
 			isAnimating = false;
 			destroy();
 			stopSignal.dispatch(self)
